@@ -1,7 +1,6 @@
 # PyCharm maye indicates an error, but it's ok ;)
 from src.fr.enssat.recaser.parser.Parser import Parser
 
-
 def getAbsolutePath(param) :
     """Compute the absolute path of the file if present in the 'resources' directory"""
     import os
