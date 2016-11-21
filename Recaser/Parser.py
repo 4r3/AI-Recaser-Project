@@ -1,13 +1,17 @@
 import re
 
-class Parser:
 
+class Parser :
     def __init__(self) :
         """Empty constructor"""
 
-    def read(self, file_name):
+    def read(self, file_name) :
+        from string import punctuation
+
+       # string = "Je suis, FOU et Toi ?! ."
+
+        pattern = re.compile(r'\w+|[{}]'.format(re.escape(punctuation)))
         with open(file_name, 'r') as file :
-            for line in file :
-                for word in line.split() :
-                    print(re.split(',', word))
-                    #print(word)
+            for line in file:
+                print(pattern.findall(line))
+
