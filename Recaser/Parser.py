@@ -1,10 +1,13 @@
+import re
+
 class Parser:
 
     def __init__(self) :
-        """Constructor"""
+        """Empty constructor"""
 
-    def read(self):
-        with open('test.txt', 'r') as f :
-            for line in f :
+    def read(self, file_name):
+        with open(file_name, 'r') as file :
+            for line in file :
                 for word in line.split() :
-                    print(word)
+                    print(re.split(',', word))
+                    #print(word)
