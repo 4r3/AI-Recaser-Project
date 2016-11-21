@@ -1,5 +1,6 @@
 import re
 
+
 class Parser :
     def __init__(self) :
         """Empty constructor"""
@@ -9,6 +10,5 @@ class Parser :
 
         pattern = re.compile(r'\w+|[{}]'.format(re.escape(punctuation)))
         with open(file_name, 'r') as file :
-            for line in file:
+            for line in file :
                 print(pattern.findall(line))
-
