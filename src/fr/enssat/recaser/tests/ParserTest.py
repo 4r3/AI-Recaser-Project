@@ -10,7 +10,7 @@ def getAbsolutePath(file_name) :
 
 
 if __name__ == "__main__" :
-    parser = Parser(Parser.WORD)
+    parser = Parser(Parser.CHARACTER)
     elements = parser.read(getAbsolutePath("test.txt"))
 
     for element in elements :
