@@ -1,10 +1,10 @@
 import re as regex
 
-from src.fr.enssat.recaser.parser.SentenceElement import SentenceElement
 from src.fr.enssat.recaser.parser.RecaserOperation import RecaserOperation
+from src.fr.enssat.recaser.parser.SentenceElement import SentenceElement
 
 
-class Parser(object):
+class Parser(object) :
     WORD = "word"
     CHARACTER = "char"
 
@@ -38,11 +38,11 @@ class Parser(object):
             for line in file :
                 parts = pattern.findall(line)
                 for part in parts :
-                    if  part.isupper():
+                    if part.isupper() :
                         operation = RecaserOperation.FULL_UPPER
-                    elif part[0].isupper():
+                    elif part[0].isupper() :
                         operation = RecaserOperation.START_UPPER
-                    else:
+                    else :
                         operation = RecaserOperation.NOTHING
 
                     element = SentenceElement(part, operation)
@@ -50,5 +50,17 @@ class Parser(object):
 
         return elements
 
-    def __readAsChar(self, file_name) :
-        print("Not implemented yet !")
+    def __readAsChar(self, file_name):
+        with open(file_name, 'r') as file:
+            elements = []
+            for line in file:
+                tmp = list(line)
+                for item in tmp:
+                    if item.isupper():
+                        operation = RecaserOperation.START_UPPER
+                    else :
+                        operation = RecaserOperation.NOTHING
+
+                    element = SentenceElement(item, operation)
+                    elements.append(element)
+        return elements

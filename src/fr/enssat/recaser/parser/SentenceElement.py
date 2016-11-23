@@ -1,7 +1,7 @@
 from itertools import count
 
 
-class SentenceElement(object):
+class SentenceElement(object) :
     last_id = count(0)  # Instance counter
 
     # ===========
