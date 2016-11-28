@@ -11,7 +11,7 @@ def getAbsolutePath(file_name) :
 if __name__ == "__main__" :
     parser = Parser()
     elements_train = parser.read(getAbsolutePath("set_1/learn_set.txt"))
-    elements_test = parser.read(getAbsolutePath("set_1/validate_set.txt"))
+    elements_test = parser.read(getAbsolutePath("set_2/alice_underground_test"))
 
     #for element in elements_test :
         #print(element)
@@ -20,4 +20,4 @@ if __name__ == "__main__" :
 
     crfRecaser.validation(elements_train, elements_test)
 
-    #print(crfRecaser.generateText(elements_train, elements_test)) 
+    #print(crfRecaser.generateText(elements_train, elements_test))
