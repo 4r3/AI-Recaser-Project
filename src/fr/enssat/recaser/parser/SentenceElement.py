@@ -1,7 +1,7 @@
 from itertools import count
 
 
-class SentenceElement(object) :
+class SentenceElement(object):
     last_id = count(0)  # Instance counter
 
     # ===========
@@ -17,5 +17,9 @@ class SentenceElement(object) :
     # UTILITIES
     # =========
 
-    def __str__(self) :
-        return "SentenceElement[ id = " + str(self.id) + " | value = " + self.value + " | operation = " + str(self.operation) + " ]"
+    def __str__(self):
+        if self.value.__class__.__name__ in ('tuple'):
+            return "SentenceElement[ id = " + str(self.id) + " | value = " + self.value[0] + " | tag = " + self.value[1] + " | operation = " + str(self.operation) + " ]"
+        else: # CHAR MODE
+            return "SentenceElement[ id = " + str(self.id) + " | value = " + self.value + " | operation = " + str(self.operation) + " ]"
+
