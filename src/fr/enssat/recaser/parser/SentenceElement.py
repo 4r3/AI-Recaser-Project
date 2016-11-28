@@ -8,7 +8,7 @@ class SentenceElement(object) :
     # CONSTRUCTOR
     # ===========
 
-    def __init__(self, value, operation) :
+    def __init__(self, value, operation):
         self.id = next(self.last_id)
         self.value = value
         self.operation = operation  # Operation to do
