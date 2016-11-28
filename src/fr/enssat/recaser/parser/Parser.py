@@ -6,6 +6,7 @@ from src.fr.enssat.recaser.parser.SentenceElement import SentenceElement
 
 class Parser(object) :
     WORD = "word"
+    WORD_NLTK = "word_nltk"
     CHARACTER = "char"
 
     # ===========
@@ -22,8 +23,10 @@ class Parser(object) :
     def read(self, file_name) :
         if self.mode == self.WORD :
             return self.__readAsWord(file_name)
-        else :
+        elif self.mode == self.CHARACTER :
             return self.__readAsChar(file_name)
+        else:
+            return self.__readAsWordNLTK(file_name)
 
     # ===============
     # PRIVATE METHODS
@@ -49,6 +52,18 @@ class Parser(object) :
                     elements.append(element)
 
         return elements
+
+    def __readAsWordNLTK(self, file_name) :
+        from nltk import word_tokenize
+        from nltk import pos_tag
+
+        text = ""
+        with open(file_name, 'r') as file:
+            for line in file:
+                text += line
+
+        tokens = word_tokenize(text)
+        return pos_tag(tokens)
 
     def __readAsChar(self, file_name):
         with open(file_name, 'r') as file:
