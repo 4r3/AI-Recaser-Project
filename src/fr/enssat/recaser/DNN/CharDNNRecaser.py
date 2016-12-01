@@ -7,8 +7,13 @@ from sklearn.preprocessing import LabelEncoder
 from keras.models import Sequential, model_from_json
 from keras.layers.core import Dense, Activation
 from keras.optimizers import RMSprop
+from keras.metrics import fbeta_score
 from src.fr.enssat.recaser.tests.ParserTest import getAbsolutePath
 from src.fr.enssat.recaser.parser.Parser import Parser
+
+
+def fbeta_custom_score(y_true, y_pred):
+    return fbeta_score(y_true, y_pred, beta=10)
 
 
 class CharDNNRecaser(object) :
@@ -22,7 +27,7 @@ class CharDNNRecaser(object) :
 
         model = self.__init_model()
 
-        model = self.__run_network(data, model, batch = 256, epochs = 2)
+        model = self.__run_network(data, model, batch = 256, epochs = 1)
 
         y = model.predict(test_text)
 
@@ -49,7 +54,8 @@ class CharDNNRecaser(object) :
         model.add(Activation('softmax'))
 
         rms = RMSprop()
-        model.compile(loss = 'categorical_crossentropy', optimizer = rms, metrics = ['accuracy', ])
+        model.compile(loss ='kld', optimizer = rms,
+                      metrics = [fbeta_custom_score])
         print('Model compield in {0} seconds'.format(time.time() - start_time))
         return model
 
@@ -81,7 +87,8 @@ class CharDNNRecaser(object) :
                 model_json = model_file.read()
             model = model_from_json(model_json)
             rms = RMSprop()
-            model.compile(loss = 'categorical_crossentropy', optimizer = rms, metrics = ['accuracy'])
+            model.compile(loss = 'categorical_crossentropy', optimizer = rms,
+                          metrics = ['accuracy',fmeasure])
         else :
             model = self.__init_model()
             with open(model_path, 'w') as model_file :
@@ -117,6 +124,4 @@ class CharDNNRecaser(object) :
             source.append(element.value)
             result.append(element.operation)
 
-        print(source)
-        print(result)
         return [source, result]
