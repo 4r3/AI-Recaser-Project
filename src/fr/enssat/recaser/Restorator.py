@@ -12,7 +12,7 @@ class Restorator(object):
         current_index = 0
         for letter in text:
             if results[current_index] == 1:
-                letter = letter.upper()
+                text[current_index] = letter.upper()
             current_index += 1
 
         return text
