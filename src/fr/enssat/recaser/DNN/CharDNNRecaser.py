@@ -13,12 +13,12 @@ from src.fr.enssat.recaser.parser.Parser import Parser
 
 
 def fbeta_custom_score(y_true, y_pred):
-    return fbeta_score(y_true, y_pred, beta=10)
+    return fbeta_score(y_true, y_pred, beta=1)
 
 
 class CharDNNRecaser(object) :
     def learn(self, ressources_path = "set_2") :
-        elements = self.__get_elements_from_file(ressources_path + "/alice_underground")
+        elements = self.__get_elements_from_file(ressources_path + "/alice_underground_1")
         learn_text, learn_result = self.__format_text(elements)
 
         data = [learn_text, learn_result]
