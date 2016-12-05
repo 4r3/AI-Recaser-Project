@@ -20,7 +20,7 @@ class Parser(object):
     # PUBLIC FUNCTIONS
     # ================
 
-    def read(self, file_name):
+    def read(self, file_name, isFile=False):
         if self.mode == self.WORD:
             return self.__readAsWord(file_name)
         elif self.mode == self.CHARACTER:
@@ -73,8 +73,7 @@ class Parser(object):
             else:
                 operation = RecaserOperation.NOTHING
 
-            token_tmp = self.replace_at_index1(token, 1, token[0].lower())
-            element = SentenceElement(token_tmp, operation)
+            element = SentenceElement(token[0].lower(), token[1], operation)
 
             for existing in elements:
                 if existing.value[0] == token[0].lower():
@@ -98,7 +97,3 @@ class Parser(object):
                     elements.append(element)
         return elements
 
-    def replace_at_index1(self, tup, index, val):
-        lst = list(tup)
-        lst[index] = val
-        return tuple(lst)

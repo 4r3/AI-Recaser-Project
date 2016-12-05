@@ -1,19 +1,19 @@
 from src.fr.enssat.recaser.DNN.CharDNNRecaser import CharDNNRecaser
 
 
-class Restorator(object):
-
-    def restore(self, text):
+class Restorator(object) :
+    def restore(self, text) :
         text = text.lower()
         recaser = CharDNNRecaser()
 
         results = recaser.learn_and_return()
-
+        text_result = ""
         current_index = 0
-        for letter in text:
+        for letter in text :
             if results[current_index] == 1:
-                text[current_index] = letter.upper()
+                text_result = text_result + letter.upper()
+            else:
+                text_result = text_result + letter
             current_index += 1
 
-        return text
-
+        return text_result
