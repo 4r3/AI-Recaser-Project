@@ -17,19 +17,24 @@ def fbeta_custom_score(y_true, y_pred):
 
 
 class CharDNNRecaser(object) :
-    def learn_and_return(self, ressources_path = "set_1") :
-        source, result = self.__get_formatted_text(ressources_path + "/learn_set.txt")
-        learn_text, learn_result = self.__format_text(source, result)
-        source, result = self.__get_formatted_text(ressources_path + "/validate_set.txt")
-        test_text, test_result = self.__format_text(source, result)
+    def learn(self, ressources_path = "set_2") :
+        elements = self.__get_elements_from_file(ressources_path + "/alice_underground")
+        learn_text, learn_result = self.__format_text(elements)
 
-        data = [learn_text, test_text, learn_result, test_result]
+        data = [learn_text, learn_result]
 
-        model = self.__init_model()
+        self.model = self.__init_model()
 
-        model = self.__run_network(data, model, batch = 256, epochs = 1)
+        self.model = self.__run_network(data, self.model, batch = 256, epochs = 1)
 
-        y = model.predict(test_text)
+
+    def predict(self, text):
+
+        elements = self.__get_elements_from_text(text);
+
+        test_text, test_result = self.__format_text(elements)
+
+        y = self.model.predict(test_text)
 
         y_classes = np_utils.categorical_probas_to_classes(y)
 
@@ -63,14 +68,13 @@ class CharDNNRecaser(object) :
         try :
             start_time = time.time()
 
-            X_train, X_test, y_train, y_test = data
+            X_train, y_train = data
 
             if model is None :
                 model = self.__init_model()
 
             print('Training model...')
-            model.fit(X_train, y_train, nb_epoch = epochs, batch_size = batch,
-                      validation_data = (X_test, y_test), verbose = 2, shuffle = False)
+            model.fit(X_train, y_train, nb_epoch = epochs, batch_size = batch, verbose = 2, shuffle = False)
 
             print("Training duration : {0}".format(time.time() - start_time))
 
@@ -88,7 +92,7 @@ class CharDNNRecaser(object) :
             model = model_from_json(model_json)
             rms = RMSprop()
             model.compile(loss = 'categorical_crossentropy', optimizer = rms,
-                          metrics = ['accuracy',fmeasure])
+                          metrics = ['accuracy'])
         else :
             model = self.__init_model()
             with open(model_path, 'w') as model_file :
@@ -99,7 +103,13 @@ class CharDNNRecaser(object) :
 
         return model
 
-    def __format_text(self, source, result) :
+    def __format_text(self, elements) :
+        source = []
+        result = []
+        for element in elements:
+            source.append(element.value)
+            result.append(element.operation)
+
         for ndx, member in enumerate(source) :
             source[ndx] = ord(source[ndx])
 
@@ -114,14 +124,12 @@ class CharDNNRecaser(object) :
 
         return source, result
 
-    def __get_formatted_text(self, text_path = "test.txt") :
+    def __get_elements_from_file(self, text_path = "test.txt") :
         parser = Parser(Parser.CHARACTER)
         elements = parser.read(getAbsolutePath(text_path))
+        return elements
 
-        source = []
-        result = []
-        for element in elements :
-            source.append(element.value)
-            result.append(element.operation)
+    def __get_elements_from_text(self,text):
+        elements = parser.read(text,False)
+        return elements
 
-        return [source, result]
