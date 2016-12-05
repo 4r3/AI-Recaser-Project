@@ -15,3 +15,9 @@ if __name__ == "__main__" :
 
     for element in elements :
         print(element)
+
+    text_test = "Je suis FoU eT tOi ?! Bonjour."
+    elements2 = parser.read(text_test, False)
+    for element in elements2 :
+        print(element)
+
