@@ -11,13 +11,13 @@ def getAbsolutePath(file_name) :
 
 if __name__ == "__main__" :
     parser = Parser(Parser.WORD_NLTK)
-    elements = parser.read(getAbsolutePath("test.txt"))
+    elements = parser.read(getAbsolutePath("test.txt"), True)
 
     for element in elements :
         print(element)
 
-    text_test = "Je suis FoU eT tOi ?! Bonjour."
-    elements2 = parser.read(text_test, False)
-    for element in elements2 :
-        print(element)
+    # text_test = "Je suis FoU eT tOi ?! Bonjour la S.N.C.F et J.K Rowling"
+    # elements2 = parser.read(text_test, False)
+    # for element in elements2 :
+    #     print(element)
 

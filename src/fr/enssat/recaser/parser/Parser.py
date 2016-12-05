@@ -26,7 +26,7 @@ class Parser(object) :
         elif self.mode == self.WORD_NLTK and isFile == False:
             return self.__readAsWordNLTKText(content)
         elif self.mode == self.WORD_NLTK and isFile == True:
-            return self.__readAsWordNLTKText(content)
+            return self.__readAsWordNLTKFile(content)
 
     # ===============
     # PRIVATE METHODS
