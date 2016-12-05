@@ -10,9 +10,9 @@ class Restorator(object) :
         text_result = ""
         current_index = 0
         for letter in text :
-            if results[current_index] == 1:
+            if results[current_index] == 1 :
                 text_result = text_result + letter.upper()
-            else:
+            else :
                 text_result = text_result + letter
             current_index += 1
 
