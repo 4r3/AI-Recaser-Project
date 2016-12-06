@@ -43,7 +43,7 @@ for i, sentence in enumerate(sentences):
     for t, char in enumerate(sentence):
         X[i, t, char_indices[char]] = 1
     y[i, char_indices[next_chars[i]]] = 1
-
+print(X)
 
 # build the model: a single LSTM
 print('Build model...')
