@@ -7,11 +7,12 @@ def getAbsolutePath(file_name) :
     basepath = os.path.dirname(__file__)
     return os.path.abspath(os.path.join(basepath, "..", "..", "..", "..", "..", "resources", file_name))
 
+
 if __name__ == "__main__" :
 
     text = ""
-    with open(getAbsolutePath("test.txt"), 'r') as file:
-        for line in file:
+    with open(getAbsolutePath("test.txt"), 'r') as file :
+        for line in file :
             text += line
 
     restorator = Restorator()
@@ -19,4 +20,3 @@ if __name__ == "__main__" :
     print("BEFORE = " + text)
     text = restorator.restore(text)
     print("AFTER = " + text)
-

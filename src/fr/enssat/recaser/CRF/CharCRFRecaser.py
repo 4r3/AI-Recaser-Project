@@ -10,7 +10,7 @@ def getAbsolutePath(file_name) :
     basepath = os.path.dirname(__file__)
     return os.path.abspath(os.path.join(basepath, "..", "..", "..", "..", "..", "resources", file_name))
 
-class WordCRFRecaser(object):
+class CharCRFRecaser(object):
     prediction = []
     correct = []
 
@@ -31,7 +31,7 @@ class WordCRFRecaser(object):
     # Features pour le Recaser
     def word2features(self, sent, i):
         word = str(sent[i].value)
-        tag = sent[i].tag
+        tag = str(sent[i].tag)
         features = [
             'bias',
             'word.lower=' + word,
@@ -39,7 +39,7 @@ class WordCRFRecaser(object):
         ]
         if i > 0:
             word1 = str(sent[i-1].value)
-            tag1 = sent[i-1].tag
+            tag1 = str(sent[i-1].tag)
             features.extend([
                 '-1:word.lower=' + word1,
                 '-1:tag=' + tag1,
@@ -49,7 +49,7 @@ class WordCRFRecaser(object):
 
         if i < len(sent)-1:
             word1 = str(sent[i+1].value )
-            tag1 = sent[i+1].tag
+            tag1 = str(sent[i+1].tag)
             features.extend([
                 '+1:word.lower=' + word1,
                 '+1:tag=' + tag1,
@@ -72,11 +72,11 @@ class WordCRFRecaser(object):
             # include transitions that are possible, but not observed
             'feature.possible_transitions': True
         })
-        trainer.train(getAbsolutePath('models/trainingModelWord.crfsuite'))
+        trainer.train(getAbsolutePath('models/trainingModelChar.crfsuite'))
 
     def test(self, X_test):
         tagger = pycrfsuite.Tagger()
-        tagger.open(getAbsolutePath('models/trainingModelWord.crfsuite'))
+        tagger.open(getAbsolutePath('models/trainingModelChar.crfsuite'))
 
         #print("Predicted:", ' '.join(tagger.tag(X_test)))
         #print("Correct:  ", ' '.join(Y_test))

@@ -1,4 +1,3 @@
-
 from src.fr.enssat.recaser.parser.RecaserOperation import RecaserOperation
 from src.fr.enssat.recaser.parser.SentenceElement import SentenceElement
 
@@ -19,13 +18,13 @@ class Parser(object) :
     # ================
 
     def read(self, content, isFile = False) :
-        if self.mode == self.CHARACTER and isFile == False:
+        if self.mode == self.CHARACTER and isFile == False :
             return self.__readAsCharText(content)
-        elif self.mode == self.CHARACTER and isFile == True:
+        elif self.mode == self.CHARACTER and isFile == True :
             return self.__readAsCharFile(content)
-        elif self.mode == self.WORD_NLTK and isFile == False:
+        elif self.mode == self.WORD_NLTK and isFile == False :
             return self.__readAsWordNLTKText(content)
-        elif self.mode == self.WORD_NLTK and isFile == True:
+        elif self.mode == self.WORD_NLTK and isFile == True :
             return self.__readAsWordNLTKFile(content)
 
     # ===============
