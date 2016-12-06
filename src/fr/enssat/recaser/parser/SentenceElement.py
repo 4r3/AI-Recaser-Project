@@ -10,7 +10,7 @@ class SentenceElement(object):
 
     def __init__(self, value, tag, operation):
         self.id = next(self.last_id)
-        self.value = value
+        self.value = value.lower()
         self.tag = tag
         self.operation = operation  # Operation to do
 

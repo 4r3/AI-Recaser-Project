@@ -6,7 +6,12 @@ class Restorator(object) :
         text = text.lower()
         recaser = CharDNNRecaser()
 
-        results = recaser.learn_and_return()
+        recaser.learn()
+
+        results = recaser.predict(text)
+
+        print(results)
+
         text_result = ""
         current_index = 0
         for letter in text :
