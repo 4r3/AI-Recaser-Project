@@ -1,3 +1,5 @@
+from itertools import count
+
 from src.fr.enssat.recaser.parser.RecaserOperation import RecaserOperation
 from src.fr.enssat.recaser.parser.SentenceElement import SentenceElement
 
@@ -19,13 +21,20 @@ class Parser(object) :
 
     def read(self, content, isFile = False) :
         if self.mode == self.CHARACTER and isFile == False :
-            return self.__readAsCharText(content)
+            elements = self.__readAsCharText(content)
         elif self.mode == self.CHARACTER and isFile == True :
-            return self.__readAsCharFile(content)
+            elements = self.__readAsCharFile(content)
         elif self.mode == self.WORD_NLTK and isFile == False :
-            return self.__readAsWordNLTKText(content)
+            elements = self.__readAsWordNLTKText(content)
         elif self.mode == self.WORD_NLTK and isFile == True :
-            return self.__readAsWordNLTKFile(content)
+            elements = self.__readAsWordNLTKFile(content)
+        else:
+            raise Exception("Invalid mode")
+
+        #for element in elements:
+         #   element.value = element.value.lower()
+
+        return elements
 
     # ===============
     # PRIVATE METHODS
@@ -74,7 +83,7 @@ class Parser(object) :
             else :
                 operation = RecaserOperation.NOTHING
 
-            element = SentenceElement(token[0].lower(), token[1], operation)
+            element = SentenceElement(token[0], token[1], operation)
 
             for existing in elements :
                 if existing.value[0] == token[0].lower() :
@@ -95,18 +104,34 @@ class Parser(object) :
                         operation = RecaserOperation.NOTHING
 
                     element = SentenceElement(item, None, operation)
+
                     elements.append(element)
         return elements
 
     def __readAsCharText(self, text) :
-        elements = []
-        for item in text :
-            if item.isupper() :
-                operation = RecaserOperation.START_UPPER
-            else :
-                operation = RecaserOperation.NOTHING
+        # Parse as words
+        elements = self.__readAsWordNLTKText(text)
+        SentenceElement.last_id = count(0) # Ugly temporary fix
+        for element in elements :
+            print(element)
+        print("Word elements = ", elements)
 
-            element = SentenceElement(item, None, operation)
-            elements.append(element)
+        # Create element for each char of each word
+        new_elements = []
+        for element in elements:
+            for letter in element.value:
+                print("Letter = ", letter)
+                if letter.isupper() :
+                    operation = RecaserOperation.START_UPPER
+                else :
+                    operation = RecaserOperation.NOTHING
+                new_element = SentenceElement(letter, element.tag, operation)
 
-        return elements
+                for existing in new_elements :
+                    if existing.value[0].lower() == new_element.value.lower() :
+                        new_element.id = existing.id
+                new_elements.append(new_element)
+            new_elements.append(SentenceElement(" ", " ", RecaserOperation.NOTHING))
+
+        print("new elements = ", new_elements)
+        return new_elements

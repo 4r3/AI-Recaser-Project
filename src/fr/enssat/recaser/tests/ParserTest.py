@@ -10,8 +10,13 @@ def getAbsolutePath(file_name) :
 
 
 if __name__ == "__main__" :
-    parser = Parser(Parser.WORD_NLTK)
-    elements = parser.read(getAbsolutePath("test.txt"), True)
+    parser = Parser(Parser.CHARACTER)
+    #elements = parser.read(getAbsolutePath("test.txt"), True)
+    elements = parser.read("Je suis FOU, et Toi je sais Pas ?! !", False)
+    #TODO rajouter les espaces lettre à lettre
+    # D'une éxécution à l'autre du parseur, il faut avoir les mêmes ID.
+
+    print(elements)
 
     for element in elements :
         print(element)
