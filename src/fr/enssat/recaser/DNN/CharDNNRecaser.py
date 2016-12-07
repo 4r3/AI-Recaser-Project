@@ -3,7 +3,6 @@ import time
 import numpy as np
 from keras.utils import np_utils
 from keras.layers import Embedding, LSTM
-from keras.optimizers import RMSprop
 from sklearn.preprocessing import LabelEncoder
 from keras.models import Sequential, model_from_json
 from keras.layers.core import Dense, Activation
@@ -20,16 +19,8 @@ class CharDNNRecaser(object) :
         self.border = 4
         self.model = self.__init_model()
 
-<<<<<<< Updated upstream
-    def learn(self, ressources_path = "corpus_1"):
-        path = get_file('nietzsche.txt', origin="https://s3.amazonaws.com/text-datasets/nietzsche.txt")
-        text = open(path).read()
-        elements = self.__get_elements_from_text(text)
-        #elements = self.__get_elements_from_file(ressources_path + "/corpus")
-=======
     def learn(self, ressources_path = "set_1"):
-        elements = self.__get_elements_from_file(ressources_path + "/learn_set.txt")
->>>>>>> Stashed changes
+        elements = self.__get_elements_from_file(ressources_path + "/corpus")
         learn_text, learn_result = self.__format_text(elements)
 
         data = [learn_text, learn_result]
