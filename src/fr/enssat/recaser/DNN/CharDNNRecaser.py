@@ -19,7 +19,7 @@ class CharDNNRecaser(object) :
         self.border = 4
         self.model = self.__init_model()
 
-    def learn(self, ressources_path = "set_1"):
+    def learn(self, ressources_path = "corpus_1"):
         elements = self.__get_elements_from_file(ressources_path + "/corpus")
         learn_text, learn_result = self.__format_text(elements)
 
@@ -74,7 +74,7 @@ class CharDNNRecaser(object) :
                             1: 1}
 
             model.fit(X_train, y_train,validation_split=0.2, nb_epoch = epochs, batch_size = 256,
-                      verbose = 2, shuffle = False, class_weight=class_weight)
+                      verbose = 1, shuffle = False, class_weight=class_weight)
 
             print("Training duration : {0}".format(time.time() - start_time))
 
