@@ -1,5 +1,6 @@
 from src.fr.enssat.recaser.parser.Parser import Parser
-from src.fr.enssat.recaser.CRF.WordCRFRecaser import CRFRecaser
+from src.fr.enssat.recaser.CRF.WordCRFRecaser import WordCRFRecaser
+from src.fr.enssat.recaser.CRF.CharCRFRecaser import CharCRFRecaser
 
 
 def getAbsolutePath(file_name) :
@@ -9,14 +10,21 @@ def getAbsolutePath(file_name) :
     return os.path.abspath(os.path.join(basepath, "..", "..", "..", "..", "..", "resources", file_name))
 
 if __name__ == "__main__" :
-    parser = Parser()
-    elements_train = parser.read(getAbsolutePath("set_1/learn_set.txt"))
-    elements_test = parser.read(getAbsolutePath("set_2/alice_underground_test"))
+    #parser = Parser(Parser.WORD_NLTK)
+    #elements_train = parser.read(getAbsolutePath("set_1/learn_set.txt"), True)
+    #elements_test = parser.read(getAbsolutePath("corpus_2/corpus"), True)
 
-    #for element in elements_test :
-        #print(element)
+    #crfRecaser = WordCRFRecaser()
 
-    crfRecaser = CRFRecaser()
+    #crfRecaser.validation(elements_train, elements_test)
+
+
+    parser = Parser(Parser.CHARACTER)
+    elements_train = parser.read(getAbsolutePath("set_1/learn_set.txt"), True)
+    print(elements_train[0])
+    elements_test = parser.read(getAbsolutePath("corpus_2/corpus"), True)
+
+    crfRecaser = CharCRFRecaser()
 
     crfRecaser.validation(elements_train, elements_test)
 
