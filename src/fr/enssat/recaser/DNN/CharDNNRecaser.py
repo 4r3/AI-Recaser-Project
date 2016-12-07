@@ -22,11 +22,11 @@ class CharDNNRecaser(object) :
         self.border = 1;
         self.model = self.__init_model()
 
-    def learn(self, ressources_path = "set_1"):
+    def learn(self, ressources_path = "corpus_1"):
         path = get_file('nietzsche.txt', origin="https://s3.amazonaws.com/text-datasets/nietzsche.txt")
         text = open(path).read()
         elements = self.__get_elements_from_text(text)
-        #elements = self.__get_elements_from_file(ressources_path + "/learn_set.txt")
+        #elements = self.__get_elements_from_file(ressources_path + "/corpus")
         learn_text, learn_result = self.__format_text(elements)
 
         data = [learn_text, learn_result]
