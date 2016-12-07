@@ -1,14 +1,10 @@
+import time
 from itertools import chain
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.preprocessing import LabelBinarizer
 import pycrfsuite
 import matplotlib.pyplot as plt
-
-def getAbsolutePath(file_name) :
-    """Compute the absolute path of the file if present in the 'resources' directory"""
-    import os
-    basepath = os.path.dirname(__file__)
-    return os.path.abspath(os.path.join(basepath, "..", "..", "..", "..", "..", "resources", file_name))
+from src.fr.enssat.recaser.parser.Parser import Parser
 
 class WordCRFRecaser(object):
     prediction = []
@@ -72,11 +68,11 @@ class WordCRFRecaser(object):
             # include transitions that are possible, but not observed
             'feature.possible_transitions': True
         })
-        trainer.train(getAbsolutePath('models/trainingModelWord.crfsuite'))
+        trainer.train(self.getAbsolutePath('models/trainingModelWord.crfsuite'))
 
     def test(self, X_test):
         tagger = pycrfsuite.Tagger()
-        tagger.open(getAbsolutePath('models/trainingModelWord.crfsuite'))
+        tagger.open(self.getAbsolutePath('models/trainingModelWord.crfsuite'))
 
         #print("Predicted:", ' '.join(tagger.tag(X_test)))
         #print("Correct:  ", ' '.join(Y_test))
@@ -144,6 +140,41 @@ class WordCRFRecaser(object):
         return result[1:]
 
 
+
+    def initModel(self):
+        parser = Parser(Parser.CHARACTER)
+
+        elements_train = self.loadFile("corpus_1/corpus")
+        [X_train, Y_train] = self.prepare_training(elements_train)
+
+        elements_train = self.loadFile("corpus_2/corpus")
+        [X_train2, Y_train2] = self.prepare_training(elements_train)
+        X_train.extend(X_train2)
+        Y_train.extend(Y_train2)
+
+        start_time = time.time()
+        self.train(X_train, Y_train)
+        print('Model compiled in {0} seconds'.format(time.time() - start_time))
+
+    def testModel(self):
+        parser = Parser(Parser.CHARACTER)
+
+        elements_test = self.loadFile("corpus_3/corpus")
+        [X_test, self.correct] = self.prepare_test(elements_test)
+
+        #elements_test = self.loadFile("corpus_4/corpus")
+        #[X_test2, Y_correct2] = self.prepare_test(elements_test)
+        #X_test.extend(X_test2)
+        #self.correct.extend(Y_correct2)
+
+        start_time = time.time()
+        self.prediction = self.test(X_test)
+        print('Model tested in {0} seconds'.format(time.time() - start_time))
+
+        confusionMatrix = confusion_matrix(self.correct, self.prediction)
+        print(confusionMatrix)
+
+
     #
     #   Private methods
     #
@@ -159,3 +190,15 @@ class WordCRFRecaser(object):
     #Création des valeurs test
     def sent2tokens(self, sent):
         return [message.value for message in sent]
+
+    #Récupérer le chemin absolu
+    def getAbsolutePath(self, file_name) :
+        """Compute the absolute path of the file if present in the 'resources' directory"""
+        import os
+        basepath = os.path.dirname(__file__)
+        return os.path.abspath(os.path.join(basepath, "..", "..", "..", "..", "..", "resources", file_name))
+
+    #Charger les fichiers
+    def loadFile(self, filePath):
+        parser = Parser(Parser.WORD_NLTK)
+        return parser.read(self.getAbsolutePath(filePath), True)
