@@ -1,4 +1,4 @@
-from src.fr.enssat.recaser.Restorator import Restorator
+from src.fr.enssat.recaser.validation.Restorator import Restorator
 
 
 def getAbsolutePath(file_name) :

@@ -12,7 +12,7 @@ def getAbsolutePath(file_name) :
 if __name__ == "__main__" :
     #parser = Parser(Parser.WORD_NLTK)
     #elements_train = parser.read(getAbsolutePath("set_1/learn_set.txt"), True)
-    #elements_test = parser.read(getAbsolutePath("set_2/alice_underground_1"), True)
+    #elements_test = parser.read(getAbsolutePath("corpus_2/corpus"), True)
 
     #crfRecaser = WordCRFRecaser()
 
@@ -22,7 +22,7 @@ if __name__ == "__main__" :
     parser = Parser(Parser.CHARACTER)
     elements_train = parser.read(getAbsolutePath("set_1/learn_set.txt"), True)
     print(elements_train[0])
-    elements_test = parser.read(getAbsolutePath("set_2/alice_underground_1"), True)
+    elements_test = parser.read(getAbsolutePath("corpus_2/corpus"), True)
 
     crfRecaser = CharCRFRecaser()
 
