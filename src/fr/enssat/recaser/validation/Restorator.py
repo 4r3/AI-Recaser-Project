@@ -73,7 +73,9 @@ class Restorator(object) :
         current_index = 0
         for word in query_lower.split() :
             if results[current_index] == RecaserOperation.START_UPPER :
-                word[0] = word[0].upper()
+                new = list(word)
+                new[0] = new[0].upper()
+                "".join(new)
                 text_result = text_result + word
             elif results[current_index] == RecaserOperation.FULL_UPPER :
                 text_result = text_result + word.upper()

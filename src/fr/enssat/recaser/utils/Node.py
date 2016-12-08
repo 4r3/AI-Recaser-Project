@@ -1,4 +1,4 @@
-class Node :
+class Node(object) :
     def __init__(self, word = None, word_id = None) :
         self.word = word
         self.word_id = word_id
