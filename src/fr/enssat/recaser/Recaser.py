@@ -4,11 +4,12 @@ from src.fr.enssat.recaser.validation.Restorator import Restorator
 
 class Recaser(object) :
 
-    def recase(self, text_query, approach):
+    @staticmethod
+    def recase(text_query, approach):
         """Recase the given text_query using the given approach."""
 
-        if approach not in RecaserMethod.__members__.items():
-            raise Exception("Invalid approach !")
+        #if approach not in RecaserMethod.__members__.items():
+        #    raise Exception("Invalid approach !")
 
         restorator = Restorator()
         result = restorator.restore(text_query, approach)

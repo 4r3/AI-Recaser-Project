@@ -52,9 +52,9 @@ class CharDNNRecaser(object) :
         print('Compiling Model ... ')
         model = Sequential()
         # set input shape
-        model.add(Embedding(input_dim = 1000, output_dim = 1000, input_shape = (1 + self.border * 2, 1)))
+        model.add(Embedding(input_dim = 200, output_dim = 200, input_shape = (1 + self.border * 2, 1)))
 
-        model.add(LSTM(500))
+        model.add(LSTM(100))
 
         model.add(Dense(50))
         # shape the output
@@ -117,11 +117,8 @@ class CharDNNRecaser(object) :
         source = []
         result = []
         for element in elements :
-            source.append(element.value)
+            source.append(element.id)
             result.append(element.operation)
-
-        for ndx, member in enumerate(source) :
-            source[ndx] = ord(source[ndx]) % 1000
 
         len_source = len(source)
         source = np.array(source)

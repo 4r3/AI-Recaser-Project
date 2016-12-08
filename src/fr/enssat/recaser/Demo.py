@@ -1,4 +1,4 @@
-from src.fr.enssat.recaser import RecaserMethod
+from src.fr.enssat.recaser.RecaserMethod import RecaserMethod
 from src.fr.enssat.recaser.Recaser import Recaser
 
 if __name__ == "__main__" :
