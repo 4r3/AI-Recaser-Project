@@ -58,7 +58,7 @@ class Parser(object) :
                 value = token[0].lower()
 
             if value == " ":
-                tag = None
+                tag = " "
             else:
                 tag = token[1]
 
