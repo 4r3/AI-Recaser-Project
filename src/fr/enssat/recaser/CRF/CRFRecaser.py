@@ -113,9 +113,9 @@ class CRFRecaser(object):
         trainer.set_params({
             'feature.possible_states': True
         })
-        trainer.train('../../../../../resources/models/trainingModelWord.crfsuite')
+        trainer.train('../../../../resources/models/trainingModelWord.crfsuite')
 
     def __test(self, X_test):
         tagger = pycrfsuite.Tagger()
-        tagger.open('../../../../../resources/models/trainingModelWord.crfsuite')
+        tagger.open('../../../../resources/models/trainingModelWord.crfsuite')
         return tagger.tag(X_test)
