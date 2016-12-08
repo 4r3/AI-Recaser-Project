@@ -1,6 +1,8 @@
 import os
 import yaml
 
+from src.fr.enssat.recaser.utils.Dictionary import Dictionary
+
 
 class DictionaryLoader(object) :
     # ================
@@ -11,7 +13,13 @@ class DictionaryLoader(object) :
     def load_dictionary(resource, absolute_path=False):
         if not absolute_path:
             resource = DictionaryLoader.__get_absolute_path(resource)
-        return DictionaryLoader.__load_dictionary(resource)
+        try:
+            return DictionaryLoader.__load_dictionary(resource)
+        except FileNotFoundError:
+            print("Dictionary not found... creating a default one...")
+            new_dictionary = Dictionary()
+            DictionaryLoader.save_dictionary(new_dictionary, "default_dictionary.yaml")
+            return new_dictionary
 
     @staticmethod
     def save_dictionary(dictionary, resource, absolute_path=False):

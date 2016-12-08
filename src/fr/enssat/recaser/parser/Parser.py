@@ -6,7 +6,7 @@ from nltk.stem.snowball import EnglishStemmer
 
 from src.fr.enssat.recaser.parser.RecaserOperation import RecaserOperation
 from src.fr.enssat.recaser.parser.SentenceElement import SentenceElement
-from src.fr.enssat.recaser.utils.Dictionary import Dictionary
+from src.fr.enssat.recaser.utils.DictionaryLoader import DictionaryLoader
 
 
 class Parser(object) :
@@ -27,7 +27,7 @@ class Parser(object) :
         """Creates a new Parser with the given mode and the given stemmer. If no stemmer provided, the default 'EnglishStemmer' will be used."""
         self.mode = mode
         self.stemmer = stemmer
-        self.dictionary = Dictionary()
+        self.dictionary = DictionaryLoader.load_dictionary("default_dictionary.yaml")
 
     # ================
     # PUBLIC FUNCTIONS
@@ -42,6 +42,7 @@ class Parser(object) :
         else :
             raise Exception("Invalid mode")
 
+        DictionaryLoader.save_dictionary(self.dictionary,"default_dictionary.yaml")
         return elements
 
     # ===============
@@ -79,7 +80,7 @@ class Parser(object) :
             else :
                 tag = token[1]
 
-            if (tag in self.NLTK_TAGS) :
+            if tag in self.NLTK_TAGS :
                 tag_bin_index = self.NLTK_TAGS.index(tag)
                 tag_bin[tag_bin_index] = 1
             else :
@@ -110,7 +111,7 @@ class Parser(object) :
                 else :
                     operation = RecaserOperation.NOTHING
 
-                if (element.tag in self.NLTK_TAGS) :
+                if element.tag in self.NLTK_TAGS :
                     tag_bin_index = self.NLTK_TAGS.index(element.tag)
                     tag_bin[tag_bin_index] = 1
                 else :
