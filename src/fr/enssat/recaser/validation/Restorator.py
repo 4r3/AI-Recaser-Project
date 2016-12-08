@@ -7,6 +7,11 @@ from src.fr.enssat.recaser.utils.TextLoader import TextLoader
 
 
 class Restorator(object) :
+
+    # ==============
+    # PUBLIC METHODS
+    # ==============
+
     def restore(self, text_query, method) :
         text_query = text_query.lower()  # Insure it's full lower case
 
@@ -59,7 +64,9 @@ class Restorator(object) :
 
             return self.__restore_words(text_query, results)
 
-
+    # ===============
+    # PRIVATE METHODS
+    # ===============
 
     def __restore_words(self, query_lower, results):
         text_result = ""
@@ -75,7 +82,6 @@ class Restorator(object) :
             current_index += 1
 
             text_result += " "
-
         return text_result[:-1]
 
     def __restore_chars(self, query_lower, results):

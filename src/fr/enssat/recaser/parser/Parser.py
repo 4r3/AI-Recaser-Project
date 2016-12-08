@@ -94,6 +94,7 @@ class Parser(object) :
             tag_bin[tag_bin_index] = None
             elements.append(element)
 
+        elements.pop()
         return elements
 
     def __read_as_char(self, text) :
