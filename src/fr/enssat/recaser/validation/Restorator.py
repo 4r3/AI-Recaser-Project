@@ -31,7 +31,7 @@ class Restorator(object) :
           #  return self.__restore_words()
         elif method == RecaserMethod.CRF_CHAR:
             parser = Parser(Parser.MODE_CHARACTER)
-            text = TextLoader.get_text("corpus_1/corpus")
+            text = TextLoader.get_text("corpus_3/corpus")
             elements_learn = parser.read(text, False)
 
             recaser = CRFRecaser()
@@ -57,7 +57,7 @@ class Restorator(object) :
 
             results = recaser.predict(elements_predict)
 
-            return self.__restore_chars(text_query, results)
+            return self.__restore_words(text_query, results)
 
 
 
@@ -73,7 +73,10 @@ class Restorator(object) :
             else :
                 text_result = text_result + word
             current_index += 1
-        return text_result
+
+            text_result += " "
+
+        return text_result[:-1]
 
     def __restore_chars(self, query_lower, results):
         text_result = ""
