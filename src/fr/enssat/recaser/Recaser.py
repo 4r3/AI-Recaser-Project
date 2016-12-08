@@ -7,7 +7,7 @@ class Recaser(object) :
     def recase(self, text_query, approach):
         """Recase the given text_query using the given approach."""
 
-        if not approach in RecaserMethod.__members__.items():
+        if approach not in RecaserMethod.__members__.items():
             raise Exception("Invalid approach !")
 
         restorator = Restorator()

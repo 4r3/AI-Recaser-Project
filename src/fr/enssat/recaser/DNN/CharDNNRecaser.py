@@ -10,7 +10,7 @@ from keras.utils import np_utils
 from sklearn.preprocessing import LabelEncoder
 
 from src.fr.enssat.recaser.parser.Parser import Parser
-from src.fr.enssat.recaser.tests.ParserTest import getAbsolutePath
+from src.fr.enssat.recaser.utils.TextLoader import TextLoader
 
 
 def fbeta_custom_score(y_true, y_pred) :
@@ -150,10 +150,10 @@ class CharDNNRecaser(object) :
 
     def __get_elements_from_file(self, text_path = "test.txt") :
         parser = Parser(Parser.MODE_CHARACTER)
-        elements = parser.read(getAbsolutePath(text_path), True)
+        elements = parser.read(TextLoader.get_text(text_path))
         return elements
 
     def __get_elements_from_text(self, text) :
         parser = Parser(Parser.MODE_CHARACTER)
-        elements = parser.read(text, False)
+        elements = parser.read(text)
         return elements
