@@ -197,6 +197,6 @@ class WordCRFRecaser(object) :
     # Charger les fichiers
     def loadFile(self, filePath) :
         loader = TextLoader()
-        text = loader.getText(filePath, False)
-        parser = Parser(Parser.WORD)
+        text = loader.get_text(filePath, False)
+        parser = Parser(Parser.MODE_WORD)
         return parser.read(text, False)

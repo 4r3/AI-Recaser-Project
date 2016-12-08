@@ -149,11 +149,11 @@ class CharDNNRecaser(object) :
         return source_data, result
 
     def __get_elements_from_file(self, text_path = "test.txt") :
-        parser = Parser(Parser.CHARACTER)
+        parser = Parser(Parser.MODE_CHARACTER)
         elements = parser.read(getAbsolutePath(text_path), True)
         return elements
 
     def __get_elements_from_text(self, text) :
-        parser = Parser(Parser.CHARACTER)
+        parser = Parser(Parser.MODE_CHARACTER)
         elements = parser.read(text, False)
         return elements

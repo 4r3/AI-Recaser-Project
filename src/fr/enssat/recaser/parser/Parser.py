@@ -10,10 +10,10 @@ from src.fr.enssat.recaser.utils.Dictionary import Dictionary
 
 
 class Parser(object) :
-    WORD = 1
-    CHARACTER = 2
+    MODE_WORD = 1
+    MODE_CHARACTER = 2
 
-    TAGS = ['CC', 'CD', 'DT', 'EX', 'FW', 'IN', 'JJ', 'JJR', 'JJS',
+    NLTK_TAGS = ['CC', 'CD', 'DT', 'EX', 'FW', 'IN', 'JJ', 'JJR', 'JJS',
             'LS', 'MD', 'NN', 'NNS', 'NNP', 'NNPS', 'PDT', 'POS', 'PRP',
             'PRP$', 'RB', 'RBR', 'RBS', 'RP', 'S', 'SBAR', 'SBARQ',
             'SINV', 'SQ', 'SYM', 'VB', 'VBD', 'VBG', 'VBN', 'VBP', 'VBZ',
@@ -24,6 +24,7 @@ class Parser(object) :
     # ===========
 
     def __init__(self, mode, stemmer = EnglishStemmer()) :
+        """Creates a new Parser with the given mode and the given stemmer. If no stemmer provided, the default 'EnglishStemmer' will be used."""
         self.mode = mode
         self.stemmer = stemmer
         self.dictionary = Dictionary()
@@ -33,10 +34,11 @@ class Parser(object) :
     # ================
 
     def read(self, content, stemming = False) :
-        if self.mode == self.CHARACTER :
-            elements = self.__readAsChar(content)
-        elif self.mode == self.WORD :
-            elements = self.__readAsWord(content, stemming)
+        """ Convert a text string into a list of 'SentenceElement'. The 'stemming" parameter can be provided only for 'WORD' mode."""
+        if self.mode == self.MODE_CHARACTER :
+            elements = self.__read_as_char(content)
+        elif self.mode == self.MODE_WORD :
+            elements = self.__read_as_word(content, stemming)
         else :
             raise Exception("Invalid mode")
 
@@ -46,12 +48,15 @@ class Parser(object) :
     # PRIVATE METHODS
     # ===============
 
-    def __readAsWord(self, text, stemming = False, lower = True) :
+    def __read_as_word(self, text, stemming = False, lower = True) :
+        """Consider each word as a sentence element. By default all the returned elements are lowercase (lower = True) and no stemming is applied on the given text.
+        1. """
         elements = []
-        tag_bin = np.zeros((len(self.TAGS) + 1, 1), dtype = np.bool)
+        tag_bin = np.zeros((len(self.NLTK_TAGS) + 1, 1), dtype = np.bool) # 'len +1' for any unknown tag
 
-        ll = [[word_tokenize(w), ' '] for w in text.split()]  # TODO: rename
-        tokens_tags = pos_tag(list(itertools.chain(*list(itertools.chain(*ll)))))
+        # Tokenize and keep white spaces
+        tmp = [[word_tokenize(w), ' '] for w in text.split()]
+        tokens_tags = pos_tag(list(itertools.chain(*list(itertools.chain(*tmp)))))
 
         for token in tokens_tags :
             if token[0].isupper() :
@@ -74,8 +79,8 @@ class Parser(object) :
             else :
                 tag = token[1]
 
-            if (tag in self.TAGS) :
-                tag_bin_index = self.TAGS.index(tag)
+            if (tag in self.NLTK_TAGS) :
+                tag_bin_index = self.NLTK_TAGS.index(tag)
                 tag_bin[tag_bin_index] = 1
             else :
                 tag_bin_index = len(tag_bin) - 1
@@ -90,11 +95,11 @@ class Parser(object) :
 
         return elements
 
-    def __readAsChar(self, text) :
+    def __read_as_char(self, text) :
         # Parse as words
-        elements = self.__readAsWord(text, False, False)  # Don't stem and keep case
+        elements = self.__read_as_word(text, False, False)  # Don't stem and keep case
 
-        tag_bin = np.zeros((len(self.TAGS) + 1, 1), dtype = np.bool)
+        tag_bin = np.zeros((len(self.NLTK_TAGS) + 1, 1), dtype = np.bool)
 
         # Create element for each char of each word
         new_elements = []
@@ -105,8 +110,8 @@ class Parser(object) :
                 else :
                     operation = RecaserOperation.NOTHING
 
-                if (element.tag in self.TAGS) :
-                    tag_bin_index = self.TAGS.index(element.tag)
+                if (element.tag in self.NLTK_TAGS) :
+                    tag_bin_index = self.NLTK_TAGS.index(element.tag)
                     tag_bin[tag_bin_index] = 1
                 else :
                     tag_bin_index = len(tag_bin) - 1
