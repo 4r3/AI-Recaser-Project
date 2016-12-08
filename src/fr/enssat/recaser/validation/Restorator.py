@@ -60,6 +60,7 @@ class Restorator(object) :
             elements_predict = parser.read(text_query, False)
 
             results = recaser.predict(elements_predict)
+            print(results)
 
             return self.__restore_words(text_query, results)
 
@@ -70,11 +71,13 @@ class Restorator(object) :
     def __restore_words(self, query_lower, results):
         text_result = ""
         current_index = 0
+        tmp = results[current_index]
+        print(tmp)
         for word in query_lower.split() :
             if results[current_index] == RecaserOperation.START_UPPER :
                 new = list(word)
                 new[0] = new[0].upper()
-                "".join(new)
+                word = "".join(new)
                 text_result = text_result + word
             elif results[current_index] == RecaserOperation.FULL_UPPER :
                 text_result = text_result + word.upper()
