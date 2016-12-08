@@ -22,6 +22,7 @@ class Parser(object) :
     def __init__(self, mode, stemmer = EnglishStemmer()) :
         self.mode = mode
         self.stemmer = stemmer
+        self.dictionary =
 
     # ================
     # PUBLIC FUNCTIONS
@@ -31,7 +32,7 @@ class Parser(object) :
         if self.mode == self.CHARACTER :
             elements = self.__readAsChar(content)
         elif self.mode == self.WORD :
-            elements = self.__readAsWord(content, stemming) 
+            elements = self.__readAsWord(content, stemming)
         else :
             raise Exception("Invalid mode")
 
@@ -89,7 +90,6 @@ class Parser(object) :
     def __readAsChar(self, text) :
         # Parse as words
         elements = self.__readAsWord(text, False, False) # Don't stem and keep case
-        SentenceElement.last_id = count(0)  # Ugly temporary fix
 
         tag_bin = np.zeros((len(self.TAGS) + 1, 1), dtype = np.bool)
 
