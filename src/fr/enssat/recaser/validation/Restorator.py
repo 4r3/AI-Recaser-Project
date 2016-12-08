@@ -6,7 +6,7 @@ from src.fr.enssat.recaser.RecaserMethod import RecaserMethod
 class Restorator(object) :
 
     def restore(self, text_query, method) :
-        text_query = text_query.lower() # Insure it's full lower case
+        text_query = text_query.lower()  # Insure it's full lower case
 
         if method == RecaserMethod.DNN_CHAR:
             recaser = CharDNNRecaser()

@@ -19,13 +19,19 @@ if __name__ == "__main__" :
     #crfRecaser.validation(elements_train, elements_test)
 
 
-    parser = Parser(Parser.CHARACTER)
-    elements_train = parser.read(getAbsolutePath("corpus_1/corpus"), True)
-    print(elements_train[0])
-    elements_test = parser.read(getAbsolutePath("corpus_2/corpus"), True)
+    #parser = Parser(Parser.CHARACTER)
+    #elements_train = parser.read(getAbsolutePath("corpus_1/corpus"), True)
+    #print(elements_train[0])
+    #elements_test = parser.read(getAbsolutePath("corpus_2/corpus"), True)
 
-    crfRecaser = CharCRFRecaser()
+    #crfRecaser = CharCRFRecaser()
 
-    crfRecaser.validation(elements_train, elements_test)
+    #crfRecaser.validation(elements_train, elements_test)
 
     #print(crfRecaser.generateText(elements_train, elements_test))
+
+
+
+    crfRecaser = WordCRFRecaser()
+    #crfRecaser.initModel();
+    crfRecaser.testModel();

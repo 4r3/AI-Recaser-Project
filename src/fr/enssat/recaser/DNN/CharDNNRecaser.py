@@ -2,14 +2,11 @@ import os
 import time
 import numpy as np
 from keras.utils import np_utils
-from keras.layers import Embedding, LSTM,SimpleRNN,GRU
-from keras.layers.wrappers import Bidirectional
-from keras.optimizers import RMSprop
+from keras.layers import Embedding, LSTM
 from sklearn.preprocessing import LabelEncoder
 from keras.models import Sequential, model_from_json
 from keras.layers.core import Dense, Activation
 from keras.metrics import fbeta_score
-from keras.utils.data_utils import get_file
 from src.fr.enssat.recaser.tests.ParserTest import getAbsolutePath
 from src.fr.enssat.recaser.parser.Parser import Parser
 
@@ -19,19 +16,16 @@ def fbeta_custom_score(y_true, y_pred):
 
 class CharDNNRecaser(object) :
     def __init__(self):
-        self.border = 1;
+        self.border = 4
         self.model = self.__init_model()
 
     def learn(self, ressources_path = "corpus_1"):
-        path = get_file('nietzsche.txt', origin="https://s3.amazonaws.com/text-datasets/nietzsche.txt")
-        text = open(path).read()
-        elements = self.__get_elements_from_text(text)
-        #elements = self.__get_elements_from_file(ressources_path + "/corpus")
+        elements = self.__get_elements_from_file(ressources_path + "/corpus")
         learn_text, learn_result = self.__format_text(elements)
 
         data = [learn_text, learn_result]
 
-        self.model = self.__run_network(data, self.model, epochs=50)
+        self.model = self.__run_network(data, self.model, epochs=4)
 
     def predict(self, text):
 
@@ -64,13 +58,12 @@ class CharDNNRecaser(object) :
         model.add(Dense(2))
         model.add(Activation('softmax'))
 
-        optimizer = RMSprop(lr=0.01)
         model.compile(loss='categorical_crossentropy', optimizer='adam',
                       metrics=[fbeta_custom_score])
         print('Model compield in {0} seconds'.format(time.time() - start_time))
         return model
 
-    def __run_network(self, data, model, epochs = 20) :
+    def __run_network(self, data, model, epochs = 10) :
         try :
             start_time = time.time()
 
@@ -81,7 +74,7 @@ class CharDNNRecaser(object) :
                             1: 1}
 
             model.fit(X_train, y_train,validation_split=0.2, nb_epoch = epochs, batch_size = 256,
-                      verbose = 2, shuffle = False, class_weight=class_weight)
+                      verbose = 1, shuffle = False, class_weight=class_weight)
 
             print("Training duration : {0}".format(time.time() - start_time))
 
@@ -126,18 +119,22 @@ class CharDNNRecaser(object) :
         for ndx, member in enumerate(source) :
             source[ndx] = ord(source[ndx])%1000
 
+        len_source = len(source)
         source = np.array(source)
-        source = np.reshape(source, (len(source), 1))
+        source = np.reshape(source, (len_source, 1))
 
         source_data = source
-        zeros = np.zeros((self.border,1))
-        source = np.append(zeros,source,0)
-        source = np.append(zeros,source,0)
-        #source = np.append(source,zeros,0)
 
-        source_data = np.append(source[1:-1],source_data,1)
-        source_data = np.append(source[0:-2],source_data,1)
-        #source_data = np.append(source_data,source[2:],1)
+        zeros = np.zeros((self.border,1))
+
+        source = np.append(zeros,source,0)
+        source = np.append(source,zeros,0)
+
+        for i in range(0, self.border+1):
+            j = self.border+i
+            k = self.border-i
+            source_data = np.append(source[k:(len_source+k)], source_data,1)
+            source_data = np.append(source_data,source[j:(len_source+j)], 1)
 
         encoder = LabelEncoder()
         encoder.fit(result)
