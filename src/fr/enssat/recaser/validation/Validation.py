@@ -17,15 +17,15 @@ class Validation(object) :
         """Generate the confusion matrix,
             y_correct is the expected result and y_predict is the prediction
             normalize at True normalizes the confusion matrix"""
-        if self.mode == 0:
+        if self.mode == 0 :
             labels = ['0', '1']
-        elif self.mode == 1:
+        elif self.mode == 1 :
             labels = ['0', '1', '2']
         confusionMatrix = confusion_matrix(y_correct, y_predict, labels)
         fig = plt.figure()
         ax = fig.add_subplot(111)
         if normalize :
-            confusionMatrix = confusionMatrix.astype('float') / confusionMatrix.sum(axis=1)[:, np.newaxis]
+            confusionMatrix = confusionMatrix.astype('float') / confusionMatrix.sum(axis = 1)[:, np.newaxis]
             plt.title('Normalized confusion matrix')
         else :
             plt.title('Confusion matrix')

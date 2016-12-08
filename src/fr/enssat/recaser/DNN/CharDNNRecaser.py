@@ -9,16 +9,13 @@ from keras.models import Sequential, model_from_json
 from keras.utils import np_utils
 from sklearn.preprocessing import LabelEncoder
 
-from src.fr.enssat.recaser.parser.Parser import Parser
-from src.fr.enssat.recaser.utils.TextLoader import TextLoader
 
-
-def fbeta_custom_score(y_true, y_pred):
-    return fbeta_score(y_true, y_pred, beta=0)
+def fbeta_custom_score(y_true, y_pred) :
+    return fbeta_score(y_true, y_pred, beta = 0)
 
 
 class CharDNNRecaser(object) :
-    def __init__(self):
+    def __init__(self) :
         self.border = 4
         self.model = self.__init_model()
 
@@ -29,7 +26,7 @@ class CharDNNRecaser(object) :
 
         self.model = self.__run_network(data, self.model, epochs = 4)
 
-    def predict(self, elements):
+    def predict(self, elements) :
 
         test_text, test_result = self.__format_text(elements)
 

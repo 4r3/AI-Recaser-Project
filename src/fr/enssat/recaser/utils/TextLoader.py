@@ -1,7 +1,7 @@
 import os
 
 
-class TextLoader(object):
+class TextLoader(object) :
     # ================
     # PUBLIC FUNCTIONS
     # ================
@@ -17,7 +17,7 @@ class TextLoader(object):
     # =================
 
     @staticmethod
-    def __get_absolute_path(resource):
+    def __get_absolute_path(resource) :
         """Compute the absolute path of the file if present in the 'resources' directory"""
         basepath = os.path.dirname(__file__)
         return os.path.abspath(os.path.join(basepath, "..", "..", "..", "..", "..", "resources", resource))

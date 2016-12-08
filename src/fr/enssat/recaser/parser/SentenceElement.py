@@ -1,5 +1,4 @@
 class SentenceElement(object) :
-
     # ===========
     # CONSTRUCTOR
     # ===========

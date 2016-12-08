@@ -14,10 +14,10 @@ class Parser(object) :
     MODE_CHARACTER = 2
 
     NLTK_TAGS = ['CC', 'CD', 'DT', 'EX', 'FW', 'IN', 'JJ', 'JJR', 'JJS',
-            'LS', 'MD', 'NN', 'NNS', 'NNP', 'NNPS', 'PDT', 'POS', 'PRP',
-            'PRP$', 'RB', 'RBR', 'RBS', 'RP', 'S', 'SBAR', 'SBARQ',
-            'SINV', 'SQ', 'SYM', 'VB', 'VBD', 'VBG', 'VBN', 'VBP', 'VBZ',
-            'WDT', 'WP', 'WP$', 'WRB', ',', '.', ' ']
+                 'LS', 'MD', 'NN', 'NNS', 'NNP', 'NNPS', 'PDT', 'POS', 'PRP',
+                 'PRP$', 'RB', 'RBR', 'RBS', 'RP', 'S', 'SBAR', 'SBARQ',
+                 'SINV', 'SQ', 'SYM', 'VB', 'VBD', 'VBG', 'VBN', 'VBP', 'VBZ',
+                 'WDT', 'WP', 'WP$', 'WRB', ',', '.', ' ']
 
     # ===========
     # CONSTRUCTOR
@@ -27,9 +27,9 @@ class Parser(object) :
         """Creates a new Parser with the given mode and the given stemmer. If no stemmer provided, the default 'EnglishStemmer' will be used."""
         self.mode = mode
         self.stemmer = stemmer
-        if self.mode == Parser.MODE_WORD:
+        if self.mode == Parser.MODE_WORD :
             self.dictionary = DictionaryLoader.load_dictionary("default_dictionary_word.yaml")
-        else:
+        else :
             self.dictionary = DictionaryLoader.load_dictionary("default_dictionary_char.yaml")
 
     # ================
@@ -45,10 +45,9 @@ class Parser(object) :
         else :
             raise Exception("Invalid mode")
 
-
-        if self.mode == Parser.MODE_WORD:
+        if self.mode == Parser.MODE_WORD :
             DictionaryLoader.save_dictionary(self.dictionary, "default_dictionary_word.yaml")
-        else:
+        else :
             DictionaryLoader.save_dictionary(self.dictionary, "default_dictionary_char.yaml")
         return elements
 
@@ -60,7 +59,7 @@ class Parser(object) :
         """Consider each word as a sentence element. By default all the returned elements are lowercase (lower = True) and no stemming is applied on the given text.
         1. """
         elements = []
-        tag_bin = np.zeros((len(self.NLTK_TAGS) + 1, 1), dtype = np.bool) # 'len +1' for any unknown tag
+        tag_bin = np.zeros((len(self.NLTK_TAGS) + 1, 1), dtype = np.bool)  # 'len +1' for any unknown tag
 
         # Tokenize and keep white spaces
         tmp = [[word_tokenize(w), ' '] for w in text.split()]

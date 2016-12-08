@@ -1,7 +1,7 @@
+import yaml
+
 from src.fr.enssat.recaser.utils.Dictionary import Dictionary
 from src.fr.enssat.recaser.utils.DictionaryLoader import DictionaryLoader
-
-import yaml
 
 dict1 = Dictionary()
 
@@ -15,7 +15,6 @@ print(dict1.get_id("f"))
 print(dict1.get_id("test"))
 print(dict1.get_id("testing"))
 print(dict1.get_id("test"))
-
 
 dump = yaml.dump(dict)
 

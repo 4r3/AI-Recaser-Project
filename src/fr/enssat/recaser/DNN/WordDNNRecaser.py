@@ -9,9 +9,6 @@ from keras.models import Sequential, model_from_json
 from keras.utils import np_utils
 from sklearn.preprocessing import LabelEncoder
 
-from src.fr.enssat.recaser.parser.Parser import Parser
-from src.fr.enssat.recaser.utils.TextLoader import TextLoader
-
 
 def fbeta_custom_score(y_true, y_pred) :
     return fbeta_score(y_true, y_pred, beta = 0)
@@ -29,7 +26,7 @@ class WordDNNRecaser(object) :
 
         self.model = self.__run_network(data, self.model, epochs = 4)
 
-    def predict(self, elements):
+    def predict(self, elements) :
 
         test_text, test_result = self.__format_text(elements)
 
@@ -75,7 +72,7 @@ class WordDNNRecaser(object) :
                             2 : 1.
                             }
 
-            model.fit(X_train, y_train, validation_split=0.2, nb_epoch = epochs, batch_size = 256,
+            model.fit(X_train, y_train, validation_split = 0.2, nb_epoch = epochs, batch_size = 256,
                       verbose = 1, shuffle = False, class_weight = class_weight)
 
             print("Training duration : {0}".format(time.time() - start_time))
@@ -115,7 +112,7 @@ class WordDNNRecaser(object) :
         source = []
         result = []
         for element in elements :
-            source.append(element.id+1)
+            source.append(element.id + 1)
             result.append(element.operation)
 
         len_source = len(source)
@@ -129,17 +126,16 @@ class WordDNNRecaser(object) :
         source = np.append(zeros, source, 0)
         source = np.append(source, zeros, 0)
 
-        for i in range(1, self.border+1):
+        for i in range(1, self.border + 1) :
             j = self.border + i
             k = self.border - i
             source_data = np.append(source[k :(len_source + k)], source_data, 1)
             source_data = np.append(source_data, source[j :(len_source + j)], 1)
 
-
         encoder = LabelEncoder()
-        encoder.fit([0,1,2])
+        encoder.fit([0, 1, 2])
         encoded_Y = encoder.transform(result)
         # convert integers to dummy variables (i.e. one hot encoded)
-        result = np_utils.to_categorical(encoded_Y,3)
+        result = np_utils.to_categorical(encoded_Y, 3)
 
         return source_data, result

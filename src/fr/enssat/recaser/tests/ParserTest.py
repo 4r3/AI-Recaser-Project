@@ -5,8 +5,8 @@ if __name__ == "__main__" :
     parser = Parser(Parser.MODE_WORD)
     loader = TextLoader()
 
-    #text = loader.get_text("test.txt", False)
-    text = loader.get_text("corpus_1/corpus",False)
+    # text = loader.get_text("test.txt", False)
+    text = loader.get_text("corpus_1/corpus", False)
 
     elements = parser.read(text, True)
 
