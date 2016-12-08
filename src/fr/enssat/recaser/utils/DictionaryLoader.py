@@ -5,6 +5,7 @@ from src.fr.enssat.recaser.utils.Dictionary import Dictionary
 
 
 class DictionaryLoader(object) :
+
     # ================
     # PUBLIC FUNCTIONS
     # ================
@@ -18,7 +19,6 @@ class DictionaryLoader(object) :
         except FileNotFoundError:
             print("Dictionary not found... creating a default one...")
             new_dictionary = Dictionary()
-            DictionaryLoader.save_dictionary(new_dictionary, "default_dictionary.yaml")
             return new_dictionary
 
     @staticmethod
@@ -35,7 +35,7 @@ class DictionaryLoader(object) :
     def __get_absolute_path(resource):
         """Compute the absolute path of the file if present in the 'resources' directory"""
         base_path = os.path.dirname(__file__)
-        return os.path.abspath(os.path.join(base_path, "..", "..", "..", "..", "..", "resources", resource))
+        return os.path.abspath(os.path.join(base_path, "..", "..", "..", "..", "..", "resources", "dictionaries", resource))
 
     @staticmethod
     def __load_dictionary(resource_path):

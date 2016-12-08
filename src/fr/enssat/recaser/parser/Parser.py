@@ -27,7 +27,10 @@ class Parser(object) :
         """Creates a new Parser with the given mode and the given stemmer. If no stemmer provided, the default 'EnglishStemmer' will be used."""
         self.mode = mode
         self.stemmer = stemmer
-        self.dictionary = DictionaryLoader.load_dictionary("default_dictionary.yaml")
+        if self.mode == Parser.MODE_WORD:
+            self.dictionary = DictionaryLoader.load_dictionary("default_dictionary_word.yaml")
+        else:
+            self.dictionary = DictionaryLoader.load_dictionary("default_dictionary_char.yaml")
 
     # ================
     # PUBLIC FUNCTIONS
@@ -42,7 +45,11 @@ class Parser(object) :
         else :
             raise Exception("Invalid mode")
 
-        DictionaryLoader.save_dictionary(self.dictionary,"default_dictionary.yaml")
+
+        if self.mode == Parser.MODE_WORD:
+            DictionaryLoader.save_dictionary(self.dictionary, "default_dictionary_word.yaml")
+        else:
+            DictionaryLoader.save_dictionary(self.dictionary, "default_dictionary_char.yaml")
         return elements
 
     # ===============

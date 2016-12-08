@@ -78,3 +78,5 @@ pip-delete-this-directory.txt
 
 *.pyc
 /resources/default_dictionary.yaml
+
+*.yaml
