@@ -2,14 +2,13 @@ from itertools import count
 
 
 class SentenceElement(object) :
-    last_id = count(0)  # Instance counter
 
     # ===========
     # CONSTRUCTOR
     # ===========
 
     def __init__(self, value, tag, operation,tag_bin, tag_bin_index) :
-        self.id = next(self.last_id)
+        self.id = None
         self.value = value
         self.tag = tag
         self.operation = operation  # Operation to do
