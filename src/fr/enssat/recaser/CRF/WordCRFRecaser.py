@@ -5,7 +5,9 @@ from sklearn.preprocessing import LabelBinarizer
 import pycrfsuite
 import matplotlib.pyplot as plt
 from src.fr.enssat.recaser.parser.Parser import Parser
+from src.fr.enssat.recaser.utils.TextLoader import TextLoader
 from src.fr.enssat.recaser.validation.Validation import Validation
+from src.fr.enssat.recaser.RecaserMethod import RecaserMethod
 
 class WordCRFRecaser(object):
     prediction = []
@@ -57,66 +59,26 @@ class WordCRFRecaser(object):
         return features
 
     def train(self, X_train, Y_train):
-        trainer = pycrfsuite.Trainer(verbose=False)
+        trainer = pycrfsuite.Trainer(algorithm='lbfgs', verbose=False)
+        #print(trainer.params())
 
         trainer.append(X_train, Y_train)
 
         trainer.set_params({
-            'c1': 1.0,   # coefficient for L1 penalty
-            'c2': 1e-3,  # coefficient for L2 penalty
-            'max_iterations': 50,  # stop earlier
+            #'c1': 1.0,   # coefficient for L1 penalty
+            #'c2': 1e-3,  # coefficient for L2 penalty
+            #'max_iterations': 50,  # stop earlier
 
             # include transitions that are possible, but not observed
-            'feature.possible_transitions': True
+            'feature.possible_transitions': True,
+            'feature.possible_states': True
         })
-        trainer.train(self.getAbsolutePath('models/trainingModelWord.crfsuite'))
+        trainer.train('../../../../../resources/models/trainingModelWord.crfsuite')
 
     def test(self, X_test):
         tagger = pycrfsuite.Tagger()
-        tagger.open(self.getAbsolutePath('models/trainingModelWord.crfsuite'))
-
-        #print("Predicted:", ' '.join(tagger.tag(X_test)))
-        #print("Correct:  ", ' '.join(Y_test))
+        tagger.open('../../../../../resources/models/trainingModelWord.crfsuite')
         return tagger.tag(X_test)
-
-    def bio_classification_report(self, y_true, y_pred):
-        """
-        Classification report for a list of BIO-encoded sequences.
-        It computes token-level metrics and discards "O" labels.
-
-        Note that it requires scikit-learn 0.15+ (or a version from github master)
-        to calculate averages properly!
-        """
-        lb = LabelBinarizer()
-        y_true_combined = lb.fit_transform(list(chain.from_iterable(y_true)))
-        y_pred_combined = lb.transform(list(chain.from_iterable(y_pred)))
-
-        tagset = set(lb.classes_) - {'O'}
-        tagset = sorted(tagset, key=lambda tag: tag.split('-', 1)[::-1])
-        class_indices = {cls: idx for idx, cls in enumerate(lb.classes_)}
-
-        return classification_report(
-            y_true_combined,
-            y_pred_combined,
-            labels = [class_indices[cls] for cls in tagset],
-            target_names = tagset,
-        )
-
-    def validation(self, elements_train, elements_test):
-        [X_train, Y_train] = self.prepare_training(elements_train)
-        [X_test, self.correct] = self.prepare_test(elements_test)
-
-        self.train(X_train, Y_train)
-        self.prediction = self.test(X_test)
-        confusionMatrix = confusion_matrix(self.correct, self.prediction)
-        plt.imshow(confusionMatrix, interpolation='nearest', cmap=plt.cm.Blues)
-        plt.title('Confusion matrix')
-        plt.colorbar()
-        plt.ylabel('Correct label')
-        plt.xlabel('Prediction label')
-        plt.show()
-
-        return self.bio_classification_report(self.correct, self.prediction)
 
     def generateText(self, elements_train, elements_test):
         [X_train, Y_train] = self.prepare_training(elements_train)
@@ -156,7 +118,7 @@ class WordCRFRecaser(object):
         print('Model compiled in {0} seconds'.format(time.time() - start_time))
 
     def testModel(self):
-        elements_test = self.loadFile("corpus_3/corpus")
+        elements_test = self.loadFile("corpus_6/corpus")
         [X_test, self.correct] = self.prepare_test(elements_test)
 
         print("Start prediction")
@@ -164,8 +126,9 @@ class WordCRFRecaser(object):
         self.prediction = self.test(X_test)
         print('Model tested in {0} seconds'.format(time.time() - start_time))
 
-        validation = Validation()
-        validation.confusionMatrix(self.correct, self.prediction)
+        validation = Validation(1)
+        print(validation.confusionMatrix(self.correct, self.prediction))
+        print(validation.confusionMatrix(self.correct, self.prediction, True))
         print(validation.classificationReport(self.correct, self.prediction))
 
     def predictFileAndTest(self, file):
@@ -235,19 +198,9 @@ class WordCRFRecaser(object):
     def sent2tokens(self, sent):
         return [message.value for message in sent]
 
-    #Récupérer le chemin absolu
-    def getAbsolutePath(self, file_name) :
-        """Compute the absolute path of the file if present in the 'resources' directory"""
-        import os
-        basepath = os.path.dirname(__file__)
-        return os.path.abspath(os.path.join(basepath, "..", "..", "..", "..", "..", "resources", file_name))
-
     #Charger les fichiers
     def loadFile(self, filePath):
-        parser = Parser(Parser.WORD_NLTK)
-        return parser.read(self.getAbsolutePath(filePath), True)
-
-    #Charger des phrases
-    def loadSentence(self, sentence):
-        parser = Parser(Parser.WORD_NLTK)
-        return parser.read(self.getAbsolutePath(sentence), False)
+        loader = TextLoader()
+        text = loader.getText(filePath, False)
+        parser = Parser(Parser.WORD)
+        return parser.read(text, False)
