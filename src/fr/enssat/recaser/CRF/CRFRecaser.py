@@ -17,37 +17,28 @@ class CRFRecaser(object):
     #   Public methods
     #
 
-    def initModel(self, file='corpus_1/corpus'):
-        elements_train = self.__loadFile(file)
-        [X_train, Y_train] = self.__prepare_training(elements_train)
-
+    def initModel(self, sentenceElements):
+        [X_train, Y_train] = self.__prepare_training(sentenceElements)
         start_time = time.time()
         self.__train(X_train, Y_train)
         print('Model compiled in {0} seconds'.format(time.time() - start_time))
 
-    def predictAndTest(self, file='corpus_2/corpus'):
-        elements_test = self.__loadFile(file)
-        [X_test, self.correct] = self.__prepare_test(elements_test)
-
+    def predictAndTest(self, sentenceElements):
+        [X_test, self.correct] = self.__prepare_test(sentenceElements)
         start_time = time.time()
         self.prediction = self.__test(X_test)
         print('Model tested in {0} seconds'.format(time.time() - start_time))
-
         return [self.correct, self.prediction]
 
-    def predict(self, file='corpus_2/corpus'):
-        elements_test = self.__loadFile(file)
-        X_test = self.__sent2features(elements_test)
-
+    def predict(self, sentenceElements):
+        X_test = self.__sent2features(sentenceElements)
         start_time = time.time()
         self.prediction = self.__test(X_test)
         print('Model tested in {0} seconds'.format(time.time() - start_time))
-
         return self.prediction
 
     def getLastResult(self):
         return self.prediction
-
 
     #
     #   Private methods
@@ -60,16 +51,6 @@ class CRFRecaser(object):
     # Création des labels
     def __sent2labels(self, sent):
         return [str(message.operation) for message in sent]
-
-    # Charger les fichiers
-    def __loadFile(self, filePath):
-        loader = TextLoader()
-        text = loader.getText(filePath, False)
-        if self.mode == self.WORD:
-            parser = Parser(Parser.WORD)
-        else:
-            parser = Parser(Parser.CHARACTER)
-        return parser.read(text, False)
 
     # Features pour le Recaser
     def __word2features(self, sent, i):
