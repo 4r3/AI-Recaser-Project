@@ -6,8 +6,9 @@ if __name__ == "__main__" :
     loader = TextLoader()
 
     text = loader.getText("test.txt",False)
+   # text = loader.getText("corpus_1/corpus",False)
 
     elements = parser.read(text, True)
 
-    for element in elements :
+    for element in elements:
         print(element)
