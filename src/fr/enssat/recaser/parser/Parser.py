@@ -16,9 +16,9 @@ class Parser(object) :
     # CONSTRUCTOR
     # ===========
 
-    def __init__(self, mode) :
+    def __init__(self, mode, stemmer = EnglishStemmer()) :
         self.mode = mode
-        self.stemmer = EnglishStemmer()
+        self.stemmer = stemmer
 
     # ================
     # PUBLIC FUNCTIONS
