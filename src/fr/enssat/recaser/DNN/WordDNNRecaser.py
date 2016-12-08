@@ -22,17 +22,14 @@ class WordDNNRecaser(object) :
         self.border = 4
         self.model = self.__init_model()
 
-    def learn(self, ressources_path = "corpus_1") :
-        elements = self.__get_elements_from_file(ressources_path + "/corpus")
+    def learn(self, elements) :
         learn_text, learn_result = self.__format_text(elements)
 
         data = [learn_text, learn_result]
 
         self.model = self.__run_network(data, self.model, epochs = 4)
 
-    def predict(self, text) :
-
-        elements = self.__get_elements_from_text(text)
+    def predict(self, elements):
 
         test_text, test_result = self.__format_text(elements)
 
@@ -145,13 +142,3 @@ class WordDNNRecaser(object) :
         result = np_utils.to_categorical(encoded_Y,3)
 
         return source_data, result
-
-    def __get_elements_from_file(self, text_path="test.txt") :
-        parser = Parser(Parser.MODE_WORD)
-        elements = parser.read(TextLoader.get_text(text_path))
-        return elements
-
-    def __get_elements_from_text(self, text):
-        parser = Parser(Parser.MODE_WORD)
-        elements = parser.read(text)
-        return elements

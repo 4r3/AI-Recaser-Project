@@ -13,26 +13,23 @@ from src.fr.enssat.recaser.parser.Parser import Parser
 from src.fr.enssat.recaser.utils.TextLoader import TextLoader
 
 
-def fbeta_custom_score(y_true, y_pred) :
-    return fbeta_score(y_true, y_pred, beta = 0)
+def fbeta_custom_score(y_true, y_pred):
+    return fbeta_score(y_true, y_pred, beta=0)
 
 
 class CharDNNRecaser(object) :
-    def __init__(self) :
+    def __init__(self):
         self.border = 4
         self.model = self.__init_model()
 
-    def learn(self, ressources_path = "corpus_1") :
-        elements = self.__get_elements_from_file(ressources_path + "/corpus")
+    def learn(self, elements) :
         learn_text, learn_result = self.__format_text(elements)
 
         data = [learn_text, learn_result]
 
         self.model = self.__run_network(data, self.model, epochs = 4)
 
-    def predict(self, text) :
-
-        elements = self.__get_elements_from_text(text)
+    def predict(self, elements):
 
         test_text, test_result = self.__format_text(elements)
 
@@ -144,13 +141,3 @@ class CharDNNRecaser(object) :
         result = np_utils.to_categorical(encoded_Y)
 
         return source_data, result
-
-    def __get_elements_from_file(self, text_path = "test.txt") :
-        parser = Parser(Parser.MODE_CHARACTER)
-        elements = parser.read(TextLoader.get_text(text_path))
-        return elements
-
-    def __get_elements_from_text(self, text) :
-        parser = Parser(Parser.MODE_CHARACTER)
-        elements = parser.read(text)
-        return elements
