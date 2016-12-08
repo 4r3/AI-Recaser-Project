@@ -34,6 +34,7 @@ class CRFRecaser(object):
         X_test = self.__sent2features(sentenceElements)
         start_time = time.time()
         self.prediction = self.__test(X_test)
+        self.prediction = [int(item) for item in self.prediction]
         print('Model tested in {0} seconds'.format(time.time() - start_time))
         return self.prediction
 
