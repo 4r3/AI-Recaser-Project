@@ -27,3 +27,4 @@ class Dictionary :
             self.size += 1
 
         return node.word_id
+
