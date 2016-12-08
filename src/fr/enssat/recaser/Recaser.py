@@ -1,4 +1,3 @@
-from src.fr.enssat.recaser import RecaserMethod
 from src.fr.enssat.recaser.validation.Restorator import Restorator
 
 
@@ -8,14 +7,15 @@ class Recaser(object) :
     def recase(text_query, approach):
         """Recase the given text_query using the given approach."""
 
-        #if approach not in RecaserMethod.__members__.items():
-        #    raise Exception("Invalid approach !")
+        tmp_text = text_query
+        text_query = text_query.lower()
 
         restorator = Restorator()
         result = restorator.restore(text_query, approach)
 
-        print("----- RECASER USING: ", approach)
-        print("Query  = ", text_query)
-        print("Result = ", result)
+        print("------------------------------ RECASING...")
+        print("Original input   = ", tmp_text)
+        print("Lower case input = ", text_query)
+        print("Predicted output = ", result)
 
         #TODO: Add measures
