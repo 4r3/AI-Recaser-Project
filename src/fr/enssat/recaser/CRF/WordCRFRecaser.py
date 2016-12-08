@@ -5,6 +5,7 @@ from sklearn.preprocessing import LabelBinarizer
 import pycrfsuite
 import matplotlib.pyplot as plt
 from src.fr.enssat.recaser.parser.Parser import Parser
+from src.fr.enssat.recaser.validation.Validation import Validation
 
 class WordCRFRecaser(object):
     prediction = []
@@ -142,8 +143,6 @@ class WordCRFRecaser(object):
 
 
     def initModel(self):
-        parser = Parser(Parser.CHARACTER)
-
         elements_train = self.loadFile("corpus_1/corpus")
         [X_train, Y_train] = self.prepare_training(elements_train)
 
@@ -157,22 +156,67 @@ class WordCRFRecaser(object):
         print('Model compiled in {0} seconds'.format(time.time() - start_time))
 
     def testModel(self):
-        parser = Parser(Parser.CHARACTER)
-
         elements_test = self.loadFile("corpus_3/corpus")
         [X_test, self.correct] = self.prepare_test(elements_test)
 
-        #elements_test = self.loadFile("corpus_4/corpus")
-        #[X_test2, Y_correct2] = self.prepare_test(elements_test)
-        #X_test.extend(X_test2)
-        #self.correct.extend(Y_correct2)
+        print("Start prediction")
+        start_time = time.time()
+        self.prediction = self.test(X_test)
+        print('Model tested in {0} seconds'.format(time.time() - start_time))
 
+        validation = Validation()
+        validation.confusionMatrix(self.correct, self.prediction)
+        print(validation.classificationReport(self.correct, self.prediction))
+
+    def predictFileAndTest(self, file):
+        elements_test = self.loadFile(file)
+        print("Loaded")
+        [X_test, self.correct] = self.prepare_test(elements_test)
+
+        print("Start prediction")
         start_time = time.time()
         self.prediction = self.test(X_test)
         print('Model tested in {0} seconds'.format(time.time() - start_time))
 
         confusionMatrix = confusion_matrix(self.correct, self.prediction)
         print(confusionMatrix)
+
+    def predictFileAndTest(self, sentence):
+        elements_test = self.loadSentence(sentence)
+        print("Loaded")
+        [X_test, self.correct] = self.prepare_test(elements_test)
+
+        print("Start prediction")
+        start_time = time.time()
+        self.prediction = self.test(X_test)
+        print('Model tested in {0} seconds'.format(time.time() - start_time))
+
+        confusionMatrix = confusion_matrix(self.correct, self.prediction)
+        print(confusionMatrix)
+
+    def predictFile(self, file):
+        elements_test = self.loadFile(file)
+        print("Loaded")
+        X_test = self.sent2features(elements_test)
+
+        print("Start prediction")
+        start_time = time.time()
+        self.prediction = self.test(X_test)
+        print('Model tested in {0} seconds'.format(time.time() - start_time))
+
+        return self.prediction
+
+    def predictSentence(self, sentence):
+        elements_test = self.loadSentence(sentence)
+        print("Loaded")
+        X_test = self.sent2features(elements_test)
+
+        print("Start prediction")
+        start_time = time.time()
+        self.prediction = self.test(X_test)
+        print('Model tested in {0} seconds'.format(time.time() - start_time))
+
+        return self.prediction
 
 
     #
@@ -202,3 +246,8 @@ class WordCRFRecaser(object):
     def loadFile(self, filePath):
         parser = Parser(Parser.WORD_NLTK)
         return parser.read(self.getAbsolutePath(filePath), True)
+
+    #Charger des phrases
+    def loadSentence(self, sentence):
+        parser = Parser(Parser.WORD_NLTK)
+        return parser.read(self.getAbsolutePath(sentence), False)
