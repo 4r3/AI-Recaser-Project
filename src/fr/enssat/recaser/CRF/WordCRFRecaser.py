@@ -1,15 +1,14 @@
 import time
-from itertools import chain
-from sklearn.metrics import classification_report, confusion_matrix
-from sklearn.preprocessing import LabelBinarizer
+
 import pycrfsuite
-import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix
+
 from src.fr.enssat.recaser.parser.Parser import Parser
 from src.fr.enssat.recaser.utils.TextLoader import TextLoader
 from src.fr.enssat.recaser.validation.Validation import Validation
-from src.fr.enssat.recaser.RecaserMethod import RecaserMethod
 
-class WordCRFRecaser(object):
+
+class WordCRFRecaser(object) :
     prediction = []
     correct = []
 
@@ -17,18 +16,18 @@ class WordCRFRecaser(object):
     #   Public methods
     #
 
-    def prepare_training(self, trainingData):
+    def prepare_training(self, trainingData) :
         X_train = self.sent2features(trainingData)
         Y_train = self.sent2labels(trainingData)
         return (X_train, Y_train)
 
-    def prepare_test(self, testData):
+    def prepare_test(self, testData) :
         X_test = self.sent2features(testData)
         Y_test = self.sent2labels(testData)
         return (X_test, Y_test)
 
     # Features pour le Recaser
-    def word2features(self, sent, i):
+    def word2features(self, sent, i) :
         word = str(sent[i].value)
         tag = sent[i].tag
         features = [
@@ -36,51 +35,51 @@ class WordCRFRecaser(object):
             'word.lower=' + word,
             'tag=' + tag,
         ]
-        if i > 0:
-            word1 = str(sent[i-1].value)
-            tag1 = sent[i-1].tag
+        if i > 0 :
+            word1 = str(sent[i - 1].value)
+            tag1 = sent[i - 1].tag
             features.extend([
                 '-1:word.lower=' + word1,
                 '-1:tag=' + tag1,
             ])
-        else:
+        else :
             features.append('BOS')
 
-        if i < len(sent)-1:
-            word1 = str(sent[i+1].value )
-            tag1 = sent[i+1].tag
+        if i < len(sent) - 1 :
+            word1 = str(sent[i + 1].value)
+            tag1 = sent[i + 1].tag
             features.extend([
                 '+1:word.lower=' + word1,
                 '+1:tag=' + tag1,
             ])
-        else:
+        else :
             features.append('EOS')
 
         return features
 
-    def train(self, X_train, Y_train):
-        trainer = pycrfsuite.Trainer(algorithm='lbfgs', verbose=False)
-        #print(trainer.params())
+    def train(self, X_train, Y_train) :
+        trainer = pycrfsuite.Trainer(algorithm = 'lbfgs', verbose = False)
+        # print(trainer.params())
 
         trainer.append(X_train, Y_train)
 
         trainer.set_params({
-            #'c1': 1.0,   # coefficient for L1 penalty
-            #'c2': 1e-3,  # coefficient for L2 penalty
-            #'max_iterations': 50,  # stop earlier
+            # 'c1': 1.0,   # coefficient for L1 penalty
+            # 'c2': 1e-3,  # coefficient for L2 penalty
+            # 'max_iterations': 50,  # stop earlier
 
             # include transitions that are possible, but not observed
-            'feature.possible_transitions': True,
-            'feature.possible_states': True
+            'feature.possible_transitions' : True,
+            'feature.possible_states' : True
         })
         trainer.train('../../../../../resources/models/trainingModelWord.crfsuite')
 
-    def test(self, X_test):
+    def test(self, X_test) :
         tagger = pycrfsuite.Tagger()
         tagger.open('../../../../../resources/models/trainingModelWord.crfsuite')
         return tagger.tag(X_test)
 
-    def generateText(self, elements_train, elements_test):
+    def generateText(self, elements_train, elements_test) :
         [X_train, Y_train] = self.prepare_training(elements_train)
         [X_test, self.correct] = self.prepare_test(elements_test)
         value_test = self.sent2tokens(elements_test)
@@ -90,21 +89,19 @@ class WordCRFRecaser(object):
 
         result = ""
 
-        for value, type in zip(value_test, self.prediction):
-            #print(value)
-            #print(type)
-            if type == "0":
+        for value, type in zip(value_test, self.prediction) :
+            # print(value)
+            # print(type)
+            if type == "0" :
                 result += " " + value
-            elif type == "1":
-                result += " " + value[0].upper() + value[1:]
-            elif type == "2":
+            elif type == "1" :
+                result += " " + value[0].upper() + value[1 :]
+            elif type == "2" :
                 result += " " + value.upper()
 
-        return result[1:]
+        return result[1 :]
 
-
-
-    def initModel(self):
+    def initModel(self) :
         elements_train = self.loadFile("corpus_1/corpus")
         [X_train, Y_train] = self.prepare_training(elements_train)
 
@@ -117,7 +114,7 @@ class WordCRFRecaser(object):
         self.train(X_train, Y_train)
         print('Model compiled in {0} seconds'.format(time.time() - start_time))
 
-    def testModel(self):
+    def testModel(self) :
         elements_test = self.loadFile("corpus_6/corpus")
         [X_test, self.correct] = self.prepare_test(elements_test)
 
@@ -131,7 +128,7 @@ class WordCRFRecaser(object):
         print(validation.confusionMatrix(self.correct, self.prediction, True))
         print(validation.classificationReport(self.correct, self.prediction))
 
-    def predictFileAndTest(self, file):
+    def predictFileAndTest(self, file) :
         elements_test = self.loadFile(file)
         print("Loaded")
         [X_test, self.correct] = self.prepare_test(elements_test)
@@ -144,7 +141,7 @@ class WordCRFRecaser(object):
         confusionMatrix = confusion_matrix(self.correct, self.prediction)
         print(confusionMatrix)
 
-    def predictFileAndTest(self, sentence):
+    def predictFileAndTest(self, sentence) :
         elements_test = self.loadSentence(sentence)
         print("Loaded")
         [X_test, self.correct] = self.prepare_test(elements_test)
@@ -157,7 +154,7 @@ class WordCRFRecaser(object):
         confusionMatrix = confusion_matrix(self.correct, self.prediction)
         print(confusionMatrix)
 
-    def predictFile(self, file):
+    def predictFile(self, file) :
         elements_test = self.loadFile(file)
         print("Loaded")
         X_test = self.sent2features(elements_test)
@@ -169,7 +166,7 @@ class WordCRFRecaser(object):
 
         return self.prediction
 
-    def predictSentence(self, sentence):
+    def predictSentence(self, sentence) :
         elements_test = self.loadSentence(sentence)
         print("Loaded")
         X_test = self.sent2features(elements_test)
@@ -180,26 +177,25 @@ class WordCRFRecaser(object):
         print('Model tested in {0} seconds'.format(time.time() - start_time))
 
         return self.prediction
-
 
     #
     #   Private methods
     #
 
-    #Création des features
-    def sent2features(self, sent):
+    # Création des features
+    def sent2features(self, sent) :
         return [self.word2features(sent, i) for i in range(len(sent))]
 
-    #Création des labels
-    def sent2labels(self, sent):
+    # Création des labels
+    def sent2labels(self, sent) :
         return [str(message.operation) for message in sent]
 
-    #Création des valeurs test
-    def sent2tokens(self, sent):
+    # Création des valeurs test
+    def sent2tokens(self, sent) :
         return [message.value for message in sent]
 
-    #Charger les fichiers
-    def loadFile(self, filePath):
+    # Charger les fichiers
+    def loadFile(self, filePath) :
         loader = TextLoader()
         text = loader.getText(filePath, False)
         parser = Parser(Parser.WORD)

@@ -1,5 +1,4 @@
 import itertools
-from itertools import count
 
 import numpy as np
 from nltk import pos_tag, word_tokenize
@@ -47,7 +46,7 @@ class Parser(object) :
     # PRIVATE METHODS
     # ===============
 
-    def __readAsWord(self, text, stemming = False, lower=True) :
+    def __readAsWord(self, text, stemming = False, lower = True) :
         elements = []
         tag_bin = np.zeros((len(self.TAGS) + 1, 1), dtype = np.bool)
 
@@ -65,9 +64,9 @@ class Parser(object) :
             if stemming :
                 value = self.stemmer.stem(token[0])  # Stem also apply lower() function
             else :
-                if lower:
+                if lower :
                     value = token[0].lower()
-                else:
+                else :
                     value = token[0]
 
             if value == " " :
@@ -83,7 +82,7 @@ class Parser(object) :
                 tag_bin[tag_bin_index] = 1
 
             element = SentenceElement(value, tag, operation, tag_bin, tag_bin_index)
-            if lower or stemming:
+            if lower or stemming :
                 element.id = self.dictionary.get_id(value)
 
             tag_bin[tag_bin_index] = None
@@ -93,7 +92,7 @@ class Parser(object) :
 
     def __readAsChar(self, text) :
         # Parse as words
-        elements = self.__readAsWord(text, False, False) # Don't stem and keep case
+        elements = self.__readAsWord(text, False, False)  # Don't stem and keep case
 
         tag_bin = np.zeros((len(self.TAGS) + 1, 1), dtype = np.bool)
 

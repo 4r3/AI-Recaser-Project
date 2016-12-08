@@ -5,10 +5,10 @@ if __name__ == "__main__" :
     parser = Parser(Parser.CHARACTER)
     loader = TextLoader()
 
-    text = loader.getText("test.txt",False)
-   # text = loader.getText("corpus_1/corpus",False)
+    text = loader.getText("test.txt", False)
+    # text = loader.getText("corpus_1/corpus",False)
 
     elements = parser.read(text, True)
 
-    for element in elements:
+    for element in elements :
         print(element)

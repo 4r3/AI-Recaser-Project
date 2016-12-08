@@ -1,14 +1,12 @@
-
 from src.fr.enssat.recaser.DNN.CharDNNRecaser import CharDNNRecaser
 from src.fr.enssat.recaser.RecaserMethod import RecaserMethod
 
 
 class Restorator(object) :
-
     def restore(self, text_query, method) :
         text_query = text_query.lower()  # Insure it's full lower case
 
-        if method == RecaserMethod.DNN_CHAR:
+        if method == RecaserMethod.DNN_CHAR :
             recaser = CharDNNRecaser()
             recaser.learn()
 
@@ -25,9 +23,5 @@ class Restorator(object) :
             return text_result
 
         # TODO: Handle other methods
-        else:
+        else :
             raise Exception("Invalid recaser method")
-
-
-
-

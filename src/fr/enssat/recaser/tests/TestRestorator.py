@@ -1,5 +1,5 @@
-from src.fr.enssat.recaser.validation.Restorator import Restorator
 from src.fr.enssat.recaser.RecaserMethod import RecaserMethod
+from src.fr.enssat.recaser.validation.Restorator import Restorator
 
 
 def getAbsolutePath(file_name) :
@@ -19,5 +19,5 @@ if __name__ == "__main__" :
     restorator = Restorator()
 
     print("BEFORE = " + text)
-    text = restorator.restore(text,RecaserMethod.DNN_CHAR)
+    text = restorator.restore(text, RecaserMethod.DNN_CHAR)
     print("AFTER = " + text)
