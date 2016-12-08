@@ -31,7 +31,7 @@ class Parser(object) :
         if self.mode == self.CHARACTER :
             elements = self.__readAsChar(content)
         elif self.mode == self.WORD :
-            elements = self.__readAsWord(content, stemming) #FIXME: setemming or force to false ?? (voir antoine)
+            elements = self.__readAsWord(content, stemming) 
         else :
             raise Exception("Invalid mode")
 
@@ -41,11 +41,11 @@ class Parser(object) :
     # PRIVATE METHODS
     # ===============
 
-    def __readAsWord(self, text, stemming = False) :
+    def __readAsWord(self, text, stemming = False, lower=True) :
         elements = []
         tag_bin = np.zeros((len(self.TAGS) + 1, 1), dtype = np.bool)
 
-        ll = [[word_tokenize(w), ' '] for w in text.split()] # TODO: rename
+        ll = [[word_tokenize(w), ' '] for w in text.split()]  # TODO: rename
         tokens_tags = pos_tag(list(itertools.chain(*list(itertools.chain(*ll)))))
 
         for token in tokens_tags :
@@ -59,7 +59,10 @@ class Parser(object) :
             if stemming :
                 value = self.stemmer.stem(token[0])  # Stem also apply lower() function
             else :
-                value = token[0].lower()
+                if lower:
+                    value = token[0].lower()
+                else:
+                    value = token[0]
 
             if value == " " :
                 tag = " "
@@ -73,7 +76,7 @@ class Parser(object) :
                 tag_bin_index = len(tag_bin) - 1
                 tag_bin[tag_bin_index] = 1
 
-            element = SentenceElement(value, tag, operation,tag_bin,tag_bin_index)
+            element = SentenceElement(value, tag, operation, tag_bin, tag_bin_index)
 
             tag_bin[tag_bin_index] = None
             for existing in elements :
@@ -85,7 +88,7 @@ class Parser(object) :
 
     def __readAsChar(self, text) :
         # Parse as words
-        elements = self.__readAsWord(text)
+        elements = self.__readAsWord(text, False, False) # Don't stem and keep case
         SentenceElement.last_id = count(0)  # Ugly temporary fix
 
         tag_bin = np.zeros((len(self.TAGS) + 1, 1), dtype = np.bool)
@@ -106,7 +109,7 @@ class Parser(object) :
                     tag_bin_index = len(tag_bin) - 1
                     tag_bin[tag_bin_index] = 1
 
-                new_element = SentenceElement(letter, element.tag, operation, tag_bin, tag_bin_index)
+                new_element = SentenceElement(letter.lower(), element.tag, operation, tag_bin, tag_bin_index)
 
                 tag_bin[tag_bin_index] = None
                 for existing in new_elements :
