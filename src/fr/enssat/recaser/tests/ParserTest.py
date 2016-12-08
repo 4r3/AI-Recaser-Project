@@ -1,27 +1,13 @@
-# PyCharm maye indicates an error, but it's ok ;)
 from src.fr.enssat.recaser.parser.Parser import Parser
-
-
-def getAbsolutePath(file_name) :
-    """Compute the absolute path of the file if present in the 'resources' directory"""
-    import os
-    basepath = os.path.dirname(__file__)
-    return os.path.abspath(os.path.join(basepath, "..", "..", "..", "..", "..", "resources", file_name))
-
+from src.fr.enssat.recaser.utils.TextLoader import TextLoader
 
 if __name__ == "__main__" :
     parser = Parser(Parser.CHARACTER)
-    #elements = parser.read(getAbsolutePath("test.txt"), True)
-    elements = parser.read("Je suis FOU, et Toi je sais Pas ?! !", False)
-    #TODO rajouter les espaces lettre à lettre
-    # D'une éxécution à l'autre du parseur, il faut avoir les mêmes ID.
+    loader = TextLoader()
 
-    print(elements)
+    text = loader.getText("test.txt",False)
+
+    elements = parser.read(text, True)
 
     for element in elements :
         print(element)
-
-        # text_test = "Je suis FoU eT tOi ?! Bonjour la S.N.C.F et J.K Rowling"
-        # elements2 = parser.read(text_test, False)
-        # for element in elements2 :
-        #     print(element)
