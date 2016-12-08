@@ -17,9 +17,9 @@ def fbeta_custom_score(y_true, y_pred) :
     return fbeta_score(y_true, y_pred, beta = 0)
 
 
-class WordDNNRecaser(object) :
+class NamedEntityDNNRecaser(object) :
     def __init__(self) :
-        self.border = 2
+        self.border = 4
         self.model = self.__init_model()
 
     def learn(self, elements) :
@@ -49,11 +49,11 @@ class WordDNNRecaser(object) :
         print('Compiling Model ... ')
         model = Sequential()
         # set input shape
-        model.add(Embedding(input_dim = 10000, output_dim = 1000, input_shape = (1 + self.border * 2, 1)))
+        model.add(Embedding(input_dim = 100, output_dim = 100, input_shape = (1 + self.border * 2, 1)))
 
-        model.add(LSTM(500))
+        model.add(LSTM(100))
 
-        model.add(Dense(500))
+        model.add(Dense(50))
         # shape the output
         model.add(Dense(3))
         model.add(Activation('softmax'))
@@ -115,7 +115,7 @@ class WordDNNRecaser(object) :
         source = []
         result = []
         for element in elements :
-            source.append(element.id+1)
+            source.append(element.tag_bin_index+1)
             result.append(element.operation)
 
         len_source = len(source)

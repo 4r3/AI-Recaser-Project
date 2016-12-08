@@ -1,5 +1,7 @@
-from src.fr.enssat.recaser.CRF.CRFRecaser import CRFRecaser
+#from src.fr.enssat.recaser.CRF.CRFRecaser import CRFRecaser
 from src.fr.enssat.recaser.DNN.CharDNNRecaser import CharDNNRecaser
+from src.fr.enssat.recaser.DNN.WordDNNRecaser import WordDNNRecaser
+from src.fr.enssat.recaser.DNN.NamedEntityDNNRecaser import NamedEntityDNNRecaser
 from src.fr.enssat.recaser.RecaserMethod import RecaserMethod
 from src.fr.enssat.recaser.parser.Parser import Parser
 from src.fr.enssat.recaser.parser.RecaserOperation import RecaserOperation
@@ -30,32 +32,25 @@ class Restorator(object) :
             return self.__restore_chars(text_query, results)
 
         elif method == RecaserMethod.DNN_WORD:
-            #TODO: Antoine salle feignasse !
-            pass
-          #  return self.__restore_words()
-        elif method == RecaserMethod.CRF_CHAR:
-            parser = Parser(Parser.MODE_CHARACTER)
-            text = TextLoader.get_text(training_corpus)
-            elements_learn = parser.read(text, False)
-
-            recaser = CRFRecaser()
-            recaser.initModel(elements_learn)
-
-
-            elements_predict = parser.read(text_query,False)
-
-            results = recaser.predict(elements_predict)
-            print(results)
-
-            return self.__restore_chars(text_query, results)
-
-        elif method == RecaserMethod.CRF_WORD:
             parser = Parser(Parser.MODE_WORD)
             text = TextLoader.get_text(training_corpus)
             elements_learn = parser.read(text, False)
 
-            recaser = CRFRecaser()
-            recaser.initModel(elements_learn)
+            recaser = WordDNNRecaser()
+            recaser.learn(elements_learn)
+
+            elements_predict = parser.read(text_query, False)
+
+            results = recaser.predict(elements_predict)
+
+            return self.__restore_words(text_query, results)
+        elif method == RecaserMethod.DNN_NAEN:
+            parser = Parser(Parser.MODE_WORD)
+            text = TextLoader.get_text(training_corpus)
+            elements_learn = parser.read(text, False)
+
+            recaser = NamedEntityDNNRecaser()
+            recaser.learn(elements_learn)
 
             elements_predict = parser.read(text_query, False)
 
@@ -63,6 +58,35 @@ class Restorator(object) :
             print(results)
 
             return self.__restore_words(text_query, results)
+        # elif method == RecaserMethod.CRF_CHAR:
+        #     parser = Parser(Parser.MODE_CHARACTER)
+        #     text = TextLoader.get_text(training_corpus)
+        #     elements_learn = parser.read(text, False)
+        #
+        #     recaser = CRFRecaser()
+        #     recaser.initModel(elements_learn)
+        #
+        #
+        #     elements_predict = parser.read(text_query,False)
+        #
+        #     results = recaser.predict(elements_predict)
+        #     print(results)
+        #
+        #     return self.__restore_chars(text_query, results)
+
+        # elif method == RecaserMethod.CRF_WORD:
+        #     parser = Parser(Parser.MODE_WORD)
+        #     text = TextLoader.get_text(training_corpus)
+        #     elements_learn = parser.read(text, False)
+        #
+        #     recaser = CRFRecaser()
+        #     recaser.initModel(elements_learn)
+        #
+        #     elements_predict = parser.read(text_query, False)
+        #
+        #     results = recaser.predict(elements_predict)
+        #
+        #     return self.__restore_words(text_query, results)
 
     # ===============
     # PRIVATE METHODS

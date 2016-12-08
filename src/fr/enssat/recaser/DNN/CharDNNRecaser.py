@@ -128,7 +128,7 @@ class CharDNNRecaser(object) :
         source = np.append(zeros, source, 0)
         source = np.append(source, zeros, 0)
 
-        for i in range(0, self.border + 1) :
+        for i in range(1, self.border + 1) :
             j = self.border + i
             k = self.border - i
             source_data = np.append(source[k :(len_source + k)], source_data, 1)
