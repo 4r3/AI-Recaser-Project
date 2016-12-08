@@ -12,18 +12,17 @@ class Restorator(object) :
     # PUBLIC METHODS
     # ==============
 
-    def restore(self, text_query, method) :
+    def restore(self, text_query, method, training_corpus) :
         text_query = text_query.lower()  # Insure it's full lower case
 
         if method == RecaserMethod.DNN_CHAR :
             recaser = CharDNNRecaser()
 
             parser = Parser(Parser.MODE_CHARACTER)
-            text = TextLoader.get_text("corpus_1/corpus")
+            text = TextLoader.get_text(training_corpus)
             elements_learn = parser.read(text,False)
 
             recaser.learn(elements_learn)
-
 
             elements_predict = parser.read(text_query,False)
 
@@ -36,7 +35,7 @@ class Restorator(object) :
           #  return self.__restore_words()
         elif method == RecaserMethod.CRF_CHAR:
             parser = Parser(Parser.MODE_CHARACTER)
-            text = TextLoader.get_text("corpus_3/corpus")
+            text = TextLoader.get_text(training_corpus)
             elements_learn = parser.read(text, False)
 
             recaser = CRFRecaser()
@@ -52,7 +51,7 @@ class Restorator(object) :
 
         elif method == RecaserMethod.CRF_WORD:
             parser = Parser(Parser.MODE_WORD)
-            text = TextLoader.get_text("corpus_1/corpus")
+            text = TextLoader.get_text(training_corpus)
             elements_learn = parser.read(text, False)
 
             recaser = CRFRecaser()
@@ -61,6 +60,7 @@ class Restorator(object) :
             elements_predict = parser.read(text_query, False)
 
             results = recaser.predict(elements_predict)
+            print(results)
 
             return self.__restore_words(text_query, results)
 
@@ -71,9 +71,13 @@ class Restorator(object) :
     def __restore_words(self, query_lower, results):
         text_result = ""
         current_index = 0
+        tmp = results[current_index]
+        print(tmp)
         for word in query_lower.split() :
             if results[current_index] == RecaserOperation.START_UPPER :
-                word[0] = word[0].upper()
+                new = list(word)
+                new[0] = new[0].upper()
+                word = "".join(new)
                 text_result = text_result + word
             elif results[current_index] == RecaserOperation.FULL_UPPER :
                 text_result = text_result + word.upper()

@@ -1,7 +1,7 @@
 from src.fr.enssat.recaser.utils.Node import Node
 
 
-class Dictionary :
+class Dictionary(object) :
     def __init__(self) :
         self.size = 0
         self.nodes = {}
