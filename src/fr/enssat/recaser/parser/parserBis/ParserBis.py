@@ -1,3 +1,6 @@
+import nltk
+import numpy as np
+
 from src.fr.enssat.recaser.parser.RecaserOperation import RecaserOperation
 from src.fr.enssat.recaser.parser.parserBis.SentenceElementBis import SentenceElement
 
@@ -52,7 +55,7 @@ class Parser(object) :
             else :
                 operation = RecaserOperation.NOTHING
 
-            element = SentenceElement(token[0].lower(), token[1], operation)
+            element = SentenceElement(token[0].lower(), token[1], operation,None,None)
 
             for existing in elements :
                 if existing.value[0] == token[0].lower() :
@@ -65,23 +68,39 @@ class Parser(object) :
         from nltk import word_tokenize
         from nltk import pos_tag
         elements = []
+        tag_all = [ 'CC', 'CD', 'DT', 'EX', 'FW', 'IN', 'JJ','JJR', 'JJS', 'LS', 'MD', 'NN', 'NNS', 'NNP', 'NNPS', 'PDT', 'POS', 'PRP', 'PRP$', 'RB', 'RBR','RBS', 'RP', 'S', 'SBAR', 'SBARQ', 'SINV', 'SQ', 'SYM', 'VBD', 'VBG','VBN', 'VBP', 'VBZ', 'WDT', 'WP', 'WP$', 'WRB']
 
+        len_tag_all = (len(tag_all)+1)
+
+        tag_bin=np.zeros((len_tag_all,1),dtype=np.bool)
         tokens_tags = pos_tag(word_tokenize(text))
 
         for token in tokens_tags :
+
+            print(token[1])
+            if(token[1] in tag_all ):
+                id = tag_all.index(token[1])
+                print(id)
+                tag_bin[id] = 1
+            else :
+                id = len(tag_bin)-1
+                tag_bin[id] = 1
+
             if token[0].isupper() :
                 operation = RecaserOperation.FULL_UPPER
             elif token[0][0].isupper() :
                 operation = RecaserOperation.START_UPPER
             else :
                 operation = RecaserOperation.NOTHING
+            print('id : '+str(id))
+            element = SentenceElement(token[0].lower(), token[1], operation,tag_bin,id)
 
-            element = SentenceElement(token[0].lower(), token[1], operation)
-
+            tag_bin[id] = None
             for existing in elements :
                 if existing.value[0] == token[0].lower() :
                     element.id = existing.id
             elements.append(element)
+
 
         return elements
 
@@ -96,7 +115,7 @@ class Parser(object) :
                     else :
                         operation = RecaserOperation.NOTHING
 
-                    element = SentenceElement(item, None, operation)
+                    element = SentenceElement(item, None, operation,None,None)
                     elements.append(element)
         return elements
 
@@ -108,7 +127,7 @@ class Parser(object) :
             else :
                 operation = RecaserOperation.NOTHING
 
-            element = SentenceElement(item, None, operation)
+            element = SentenceElement(item, None, operation,None,None)
             elements.append(element)
 
         return elements
