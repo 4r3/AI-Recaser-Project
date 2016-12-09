@@ -15,9 +15,11 @@ def fbeta_custom_score(y_true, y_pred) :
 
 
 class CharDNNRecaser(object) :
-    def __init__(self) :
-        self.border = 4
+    def __init__(self,borders=2,name=None):
+        self.border = borders
+        self.name = name
         self.model = self.__init_model()
+        self.__load_model()
 
     def learn(self, elements) :
         learn_text, learn_result = self.__format_text(elements)
@@ -25,6 +27,8 @@ class CharDNNRecaser(object) :
         data = [learn_text, learn_result]
 
         self.model = self.__run_network(data, self.model, epochs = 4)
+
+        self.__save_model()
 
     def predict(self, elements) :
 
@@ -81,31 +85,27 @@ class CharDNNRecaser(object) :
             print(' KeyboardInterrupt')
             return model
 
-    def __load_model(self) :
-        model_path = "model.json"
+    def __load_model(self):
+        if self.name != None:
+            base_path = os.path.dirname(__file__)
+            path = os.path.abspath(os.path.join(base_path, "..",
+                                                "..", "..", "..",
+                                                "..", "resources",
+                                                "dnn",self.name+".h5"))
 
-        if os.path.isfile(model_path) :
-            with open(model_path, 'r') as model_file :
-                model_json = model_file.read()
-            model = model_from_json(model_json)
-            model.compile(loss = 'mape', optimizer = 'rmsprop',
-                          metrics = [fbeta_custom_score])
-        else :
-            model = self.__init_model()
-            with open(model_path, 'w') as model_file :
-                model_file.write(model.to_json())
-
-        if os.path.isfile('weight.h5') :
-            model.load_weights('weight.h5', by_name = True)
-
-        return model
+            if os.path.isfile(path) :
+                self.model.load_weights(path)
 
     def __save_model(self) :
-        model_path = "model.json"
-        with open(model_path, 'w') as model_file :
-            model_file.write(self.model.to_json())
-        if os.path.isfile('weight.h5') :
-            self.model.load_weights('weight.h5', by_name = True)
+        if self.name != None:
+            base_path = os.path.dirname(__file__)
+            path = os.path.abspath(os.path.join(base_path, "..",
+                                                "..", "..", "..",
+                                                "..", "resources",
+                                                "models","dnn",
+                                                self.name+".h5"))
+
+            self.model.save_weights(path)
 
     def __format_text(self, elements) :
         source = []

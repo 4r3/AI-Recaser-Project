@@ -1,10 +1,8 @@
-from src.fr.enssat.recaser.CRF.CRFRecaser import CRFRecaser
 from src.fr.enssat.recaser.RecaserMethod import RecaserMethod
-from src.fr.enssat.recaser.parser.Parser import Parser
 from src.fr.enssat.recaser.validation.Validation import Validation
 
 
-class Tester(object) :
+class Tester(object):
     # ==============
     # PUBLIC METHODS
     # ==============
