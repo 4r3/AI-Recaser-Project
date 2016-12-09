@@ -65,7 +65,13 @@ class Parser(object) :
         tmp = [[word_tokenize(w), ' '] for w in text.split()]
         tokens_tags = pos_tag(list(itertools.chain(*list(itertools.chain(*tmp)))))
 
+        tmp2 = [[word_tokenize(w), ' '] for w in text.lower().split()]
+        tokens_tags2 = pos_tag(list(itertools.chain(*list(itertools.chain(*tmp2)))))
+
+        iter = 0
         for token in tokens_tags :
+            token2=tokens_tags2[iter]
+            iter += 1
             if token[0].isupper() :
                 operation = RecaserOperation.FULL_UPPER
             elif token[0][0].isupper() :
@@ -84,7 +90,7 @@ class Parser(object) :
             if value == " " :
                 tag = " "
             else :
-                tag = token[1]
+                tag = token2[1]
 
             if tag in self.NLTK_TAGS :
                 tag_bin_index = self.NLTK_TAGS.index(tag)
