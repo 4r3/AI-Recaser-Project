@@ -41,9 +41,13 @@ class Validation(object) :
     def classificationReport(self, y_correct, y_predict) :
         """Generate the precision, recall and f1-score,
             y_correct is the expected result and y_predict is the prediction"""
+
+        y_correct = [str(item) for item in y_correct]
+        y_predict = [str(item) for item in y_predict]
+
         lb = LabelBinarizer()
-        y_true_combined = lb.fit_transform(list(chain.from_iterable(y_correct)))
-        y_pred_combined = lb.transform(list(chain.from_iterable(y_predict)))
+        y_true_combined = lb.fit_transform(y_correct)
+        y_pred_combined = lb.transform(y_predict)
 
         tagset = set(lb.classes_) - {'O'}
         tagset = sorted(tagset, key = lambda tag : tag.split('-', 1)[: :-1])

@@ -4,13 +4,9 @@ import pycrfsuite
 
 
 class CRFRecaser(object) :
-    CHAR = 0
-    WORD = 1
     prediction = []
     correct = []
-
-    def __init__(self, mode = 0) :
-        self.mode = mode
+    file = "../../../../resources/models/trainingModelWord.crfsuite"
 
     #
     #   Public methods
@@ -40,6 +36,9 @@ class CRFRecaser(object) :
     def getLastResult(self) :
         return self.prediction
 
+    def setFile(self, filePath='../../../../resources/models/trainingModelWord.crfsuite'):
+        self.file = '../../../../resources/models/' + filePath + '.crfsuite'
+
     #
     #   Private methods
     #
@@ -58,21 +57,21 @@ class CRFRecaser(object) :
         tag = sent[i].tag
         features = [
             'bias',
-            'word.lower=' + word,
+            'word.lower=' + word.lower(),
             'tag=' + tag,
         ]
         if i > 0 :
             word1 = str(sent[i - 1].value)
             tag1 = sent[i - 1].tag
             features.extend([
-                '-1:word.lower=' + word1,
+                '-1:word.lower=' + word1.lower(),
                 '-1:tag=' + tag1,
             ])
             if i > 1 :
                 word1 = str(sent[i - 2].value)
                 tag1 = sent[i - 2].tag
                 features.extend([
-                    '-2:word.lower=' + word1,
+                    '-2:word.lower=' + word1.lower(),
                     '-2:tag=' + tag1,
                 ])
         else :
@@ -82,14 +81,14 @@ class CRFRecaser(object) :
             word1 = str(sent[i + 1].value)
             tag1 = sent[i + 1].tag
             features.extend([
-                '+1:word.lower=' + word1,
+                '+1:word.lower=' + word1.lower(),
                 '+1:tag=' + tag1,
             ])
             if i < len(sent) - 2 :
                 word1 = str(sent[i + 2].value)
                 tag1 = sent[i + 2].tag
                 features.extend([
-                    '+2:word.lower=' + word1,
+                    '+2:word.lower=' + word1.lower(),
                     '+2:tag=' + tag1,
                 ])
         else :
@@ -113,9 +112,9 @@ class CRFRecaser(object) :
         trainer.set_params({
             'feature.possible_states' : True
         })
-        trainer.train('../../../../resources/models/trainingModelWord.crfsuite')
+        trainer.train(self.file)
 
     def __test(self, X_test) :
         tagger = pycrfsuite.Tagger()
-        tagger.open('../../../../resources/models/trainingModelWord.crfsuite')
+        tagger.open(self.file)
         return tagger.tag(X_test)
