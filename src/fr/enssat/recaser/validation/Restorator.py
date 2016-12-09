@@ -15,7 +15,6 @@ class Restorator(object) :
 
     def restore(self, text_query, method, training_corpus) :
         text_query = text_query.lower()  # Insure it's full lower case
-        text = TextLoader.get_text(training_corpus)
 
         if method == RecaserMethod.DNN_CHAR :
             recaser = CharDNNRecaser()
@@ -23,7 +22,7 @@ class Restorator(object) :
             elements_learn = []
             for training in training_corpus:
                 text = TextLoader.get_text(training)
-                elements_learn.extend(parser.read(text, False)))
+                elements_learn.extend(parser.read(text, False))
             recaser.learn(elements_learn)
             elements_predict = parser.read(text_query, False)
             results = recaser.predict(elements_predict)
