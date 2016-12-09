@@ -20,7 +20,10 @@ class Restorator(object) :
         if method == RecaserMethod.DNN_CHAR :
             recaser = CharDNNRecaser()
             parser = Parser(Parser.MODE_CHARACTER)
-            elements_learn = parser.read(text, False)
+            elements_learn = []
+            for training in training_corpus:
+                text = TextLoader.get_text(training)
+                elements_learn.extend(parser.read(text, False)))
             recaser.learn(elements_learn)
             elements_predict = parser.read(text_query, False)
             results = recaser.predict(elements_predict)
@@ -28,7 +31,10 @@ class Restorator(object) :
 
         elif method == RecaserMethod.DNN_WORD :
             parser = Parser(Parser.MODE_WORD)
-            elements_learn = parser.read(text, False)
+            elements_learn = []
+            for training in training_corpus:
+                text = TextLoader.get_text(training)
+                elements_learn.extend(parser.read(text, False))
             recaser = WordDNNRecaser()
             recaser.learn(elements_learn)
             elements_predict = parser.read(text_query, False)
@@ -37,7 +43,10 @@ class Restorator(object) :
 
         elif method == RecaserMethod.DNN_NAEN :
             parser = Parser(Parser.MODE_WORD)
-            elements_learn = parser.read(text, False)
+            elements_learn = []
+            for training in training_corpus:
+                text = TextLoader.get_text(training)
+                elements_learn.extend(parser.read(text, False))
             recaser = NamedEntityDNNRecaser()
             recaser.learn(elements_learn)
             elements_predict = parser.read(text_query, False)
@@ -46,7 +55,10 @@ class Restorator(object) :
 
         elif method == RecaserMethod.CRF_CHAR :
             parser = Parser(Parser.MODE_CHARACTER)
-            elements_learn = parser.read(text, False)
+            elements_learn = []
+            for training in training_corpus:
+                text = TextLoader.get_text(training)
+                elements_learn.extend(parser.read(text, False))
             recaser = CRFRecaser()
             recaser.initModel(elements_learn)
             elements_predict = parser.read(text_query, False)
@@ -55,7 +67,10 @@ class Restorator(object) :
 
         elif method == RecaserMethod.CRF_WORD :
             parser = Parser(Parser.MODE_WORD)
-            elements_learn = parser.read(text, False)
+            elements_learn = []
+            for training in training_corpus:
+                text = TextLoader.get_text(training)
+                elements_learn.extend(parser.read(text, False))
             recaser = CRFRecaser()
             recaser.initModel(elements_learn)
             elements_predict = parser.read(text_query, False)
