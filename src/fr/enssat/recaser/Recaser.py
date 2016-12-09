@@ -2,6 +2,7 @@ from src.fr.enssat.recaser.validation.Restorator import Restorator
 
 
 class Recaser(object) :
+    
     @staticmethod
     def recase(text_query, approach, training_corpus = "corpus_1/corpus") :
         """Recase the given text_query using the given approach."""

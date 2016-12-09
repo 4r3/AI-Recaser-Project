@@ -15,11 +15,11 @@ class Restorator(object) :
 
     def restore(self, text_query, method, training_corpus) :
         text_query = text_query.lower()  # Insure it's full lower case
+        text = TextLoader.get_text(training_corpus)
 
         if method == RecaserMethod.DNN_CHAR :
             recaser = CharDNNRecaser()
             parser = Parser(Parser.MODE_CHARACTER)
-            text = TextLoader.get_text(training_corpus)
             elements_learn = parser.read(text, False)
             recaser.learn(elements_learn)
             elements_predict = parser.read(text_query, False)
@@ -28,7 +28,6 @@ class Restorator(object) :
 
         elif method == RecaserMethod.DNN_WORD :
             parser = Parser(Parser.MODE_WORD)
-            text = TextLoader.get_text(training_corpus)
             elements_learn = parser.read(text, False)
             recaser = WordDNNRecaser()
             recaser.learn(elements_learn)
@@ -38,7 +37,6 @@ class Restorator(object) :
 
         elif method == RecaserMethod.DNN_NAEN :
             parser = Parser(Parser.MODE_WORD)
-            text = TextLoader.get_text(training_corpus)
             elements_learn = parser.read(text, False)
             recaser = NamedEntityDNNRecaser()
             recaser.learn(elements_learn)
@@ -48,7 +46,6 @@ class Restorator(object) :
 
         elif method == RecaserMethod.CRF_CHAR :
             parser = Parser(Parser.MODE_CHARACTER)
-            text = TextLoader.get_text(training_corpus)
             elements_learn = parser.read(text, False)
             recaser = CRFRecaser()
             recaser.initModel(elements_learn)
@@ -58,7 +55,6 @@ class Restorator(object) :
 
         elif method == RecaserMethod.CRF_WORD :
             parser = Parser(Parser.MODE_WORD)
-            text = TextLoader.get_text(training_corpus)
             elements_learn = parser.read(text, False)
             recaser = CRFRecaser()
             recaser.initModel(elements_learn)
