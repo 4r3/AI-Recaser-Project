@@ -21,12 +21,12 @@ class CharDNNRecaser(object) :
         self.model = self.__init_model()
         self.__load_model()
 
-    def learn(self, elements) :
+    def learn(self, elements, epochs=4) :
         learn_text, learn_result = self.__format_text(elements)
 
         data = [learn_text, learn_result]
 
-        self.model = self.__run_network(data, self.model, epochs = 4)
+        self.model = self.__run_network(data, self.model, epochs = epochs)
 
         self.__save_model()
 
@@ -50,7 +50,7 @@ class CharDNNRecaser(object) :
         print('Compiling Model ... ')
         model = Sequential()
         # set input shape
-        model.add(Embedding(input_dim = 200, output_dim = 200, input_shape = (1 + self.border * 2, 1)))
+        model.add(Embedding(input_dim = 50, output_dim = 50, input_shape = (1 + self.border * 2, 1)))
 
         model.add(LSTM(100))
 
@@ -111,7 +111,7 @@ class CharDNNRecaser(object) :
         source = []
         result = []
         for element in elements :
-            source.append(element.id)
+            source.append(element.id + 1)
             result.append(element.operation)
 
         len_source = len(source)

@@ -21,12 +21,12 @@ class WordDNNRecaser(object) :
         self.model = self.__init_model()
         self.__load_model()
 
-    def learn(self, elements) :
+    def learn(self, elements, epochs = 4) :
         learn_text, learn_result = self.__format_text(elements)
 
         data = [learn_text, learn_result]
 
-        self.model = self.__run_network(data, self.model, epochs = 4)
+        self.model = self.__run_network(data, self.model, epochs = epochs)
 
         self.__save_model()
 

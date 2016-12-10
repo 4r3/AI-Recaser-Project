@@ -1,3 +1,4 @@
+from fr.enssat.recaser.utils.TextLoader import TextLoader
 from src.fr.enssat.recaser.Recaser import Recaser
 from src.fr.enssat.recaser.RecaserMethod import RecaserMethod
 
@@ -15,4 +16,5 @@ if __name__ == "__main__" :
 
     #print(Recaser.learn_predict(RecaserMethod.CRF_WORD, ["corpus_11/corpus", "corpus_12/corpus"], "I love unicorns so much! And you, do you want to have sex with unicorns? Oh, yes James!", "CRFTest2"))
 
-    Recaser.evaluate(RecaserMethod.CRF_WORD, ["corpus_11/corpus", "corpus_12/corpus"], "I love unicorns so much! And you, do you want to have sex with unicorns? Oh, yes James!", "CRFTest2")
+    TextLoader.get_text('corpus_13/corpus')
+    Recaser.evaluate(RecaserMethod.DNN_CHAR, ["corpus_11/corpus", "corpus_12/corpus"], TextLoader.get_text('corpus_13/corpus'))

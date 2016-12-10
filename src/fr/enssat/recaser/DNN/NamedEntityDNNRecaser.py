@@ -11,7 +11,7 @@ from sklearn.preprocessing import LabelEncoder
 
 
 def fbeta_custom_score(y_true, y_pred) :
-    return fbeta_score(y_true, y_pred, beta = 0)
+    return fbeta_score(y_true, y_pred, beta = 1)
 
 
 class NamedEntityDNNRecaser(object):
@@ -22,12 +22,12 @@ class NamedEntityDNNRecaser(object):
         self.__load_model()
 
 
-    def learn(self, elements) :
+    def learn(self, elements, epochs = 4) :
         learn_text, learn_result = self.__format_text(elements)
 
         data = [learn_text, learn_result]
 
-        self.model = self.__run_network(data, self.model, epochs = 5)
+        self.model = self.__run_network(data, self.model, epochs = epochs)
 
         self.__save_model()
 

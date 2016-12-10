@@ -8,16 +8,7 @@ class Tester(object):
     # ==============
 
     def test(self, correct, predict, method) :
-        if method == RecaserMethod.DNN_CHAR :
-            return 0
-
-        elif method == RecaserMethod.DNN_WORD :
-            return 0
-
-        elif method == RecaserMethod.DNN_NAEN :
-            return 0
-
-        elif method == RecaserMethod.CRF_CHAR :
+        if method == Validation.CHAR :
             validation = Validation(Validation.CHAR)
             print("------------------------------ VALIDATION...")
             print("------------------ Confusion Matrix...")
@@ -27,7 +18,7 @@ class Tester(object):
             print("------------------ Classification Report...")
             print(validation.classificationReport(correct, predict))
 
-        elif method == RecaserMethod.CRF_WORD :
+        elif method == Validation.WORD :
             validation = Validation(Validation.WORD)
             print("------------------------------ VALIDATION...")
             print("------------------ Confusion Matrix...")
