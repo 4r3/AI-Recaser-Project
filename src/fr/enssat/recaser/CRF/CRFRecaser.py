@@ -1,5 +1,4 @@
 import time
-
 import pycrfsuite
 
 
@@ -75,7 +74,14 @@ class CRFRecaser(object) :
                     '-2:tag=' + tag1,
                 ])
         else :
-            features.append('BOS')
+            features.extend([
+                '-1:word.lower= ',
+                '-1:tag= ',
+            ])
+            features.extend([
+                '-2:word.lower=.',
+                '-2:tag=.',
+            ])
 
         if i < len(sent) - 1 :
             word1 = str(sent[i + 1].value)
