@@ -1,5 +1,4 @@
-from itertools import chain
-
+import itertools
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.metrics import classification_report, confusion_matrix
@@ -29,13 +28,21 @@ class Validation(object) :
             plt.title('Normalized confusion matrix')
         else :
             plt.title('Confusion matrix')
-        cax = ax.matshow(confusionMatrix)
-        fig.colorbar(cax)
         ax.set_xticklabels([''] + labels)
         ax.set_yticklabels([''] + labels)
-        plt.ylabel('Correct label')
-        plt.xlabel('Prediction label')
+        plt.imshow(confusionMatrix, interpolation='nearest', cmap=plt.cm.Blues)
+        plt.colorbar()
+        thresh = confusionMatrix.max() / 2.
+        for i, j in itertools.product(range(confusionMatrix.shape[0]), range(confusionMatrix.shape[1])):
+            plt.text(j, i, round(confusionMatrix[i, j], 2),
+                     horizontalalignment="center",
+                     color="white" if confusionMatrix[i, j] > thresh else "black")
+        plt.tight_layout()
+        plt.ylabel('True label')
+        plt.xlabel('Predicted label')
+
         plt.show()
+
         return confusionMatrix
 
     def classificationReport(self, y_correct, y_predict) :
