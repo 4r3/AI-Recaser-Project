@@ -54,7 +54,7 @@ class WordDNNRecaser(object) :
 
         model.add(LSTM(500))
 
-        model.add(Dense(500))
+        model.add(Dense(200))
         # shape the output
         model.add(Dense(3))
         model.add(Activation('softmax'))
